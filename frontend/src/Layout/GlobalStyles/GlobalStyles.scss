@@ -1,0 +1,64 @@
+@import "normalize.css";
+
+:root {
+  --primary: #fe2c55;
+  --black: #000;
+  --white: #fff;
+  --text-color: #161823;
+
+  --font-family: "ProximaNova", sans-serif;
+
+  // Default layout
+  --default-layout-header-height: 60px;
+  --default-layout-width: 1150px;
+  --default-layout-horizontal-spacer: 24px;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  text-rendering: optimizespeed;
+}
+button,
+[tabindex] {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+body .tippy-box {
+  padding: 4px;
+  background-color: #4d4b4ae1;
+  border-radius: 10px;
+  font-size: medium;
+
+  -webkit-font-smoothing: antialiased;
+}
+table {
+  border: 1px solid black;
+  border-left: none;
+  border-bottom: none;
+  width: fit-content;
+  border-radius: 4px;
+}
+
+th,
+td {
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+  text-align: left;
+  padding-left: 10px;
+  width: 200px;
+  height: 30px;
+}
+th {
+  background-color: #e5e5e5;
+}
