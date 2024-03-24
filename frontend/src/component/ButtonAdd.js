@@ -12,11 +12,11 @@ function ButtonAdd({ to, title, icon }) {
         <Typography style={{ marginRight: "8px" }}>
           <img
             src={icon ? icon : PlusCircle}
-            style={{ width: "26px", height: "26px" }}
+            style={{ width: "24px", height: "24px", marginTop: '2px' }}
             alt=""
           />
         </Typography>
-        <Typography variant="h4" style={{ color: "black", fontWeight: "400" }}>
+        <Typography style={{ color: "black", fontWeight: "500",  fontSize: "20px"}}>
           {title}
         </Typography>
       </Button>

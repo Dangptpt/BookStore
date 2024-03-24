@@ -87,7 +87,7 @@ function SideBarManager() {
               className={cx("btn")}
               startIcon={<StatisticsIcon />}
             >
-              Doanh thu
+              Thống kê
             </Button>
           </NavLink>
 

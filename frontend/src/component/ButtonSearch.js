@@ -12,7 +12,7 @@ function ButtonSearch({ title, border, onclick }) {
       }}
       onClick={onclick ? onclick : ''}
     >
-      <Typography variant="h4" style={{ color: "black", fontWeight: "400" }}>
+      <Typography style={{ color: "black", fontWeight: "500", fontSize: "20px" }}>
         {title}
       </Typography>
     </Button>

@@ -23,8 +23,8 @@ function SideBarStaff() {
     <div className={cx("wrapperparent")}>
       <div className={cx("sidebar")}>
         <div className={cx("title")}>
-          <h1>Phần mềm</h1>
-          <h1>quản lý hiệu sách</h1>
+          <h1 style={{fontSize : "32px"}}>Phần mềm</h1>
+          <h1 style={{fontSize : "32px"}}>quản lý hiệu sách</h1>
         </div>
 
         <div className={cx("menu")}>
