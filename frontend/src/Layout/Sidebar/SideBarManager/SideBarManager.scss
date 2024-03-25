@@ -3,7 +3,7 @@
   background-color: #fafafa;
   display: flex;
   flex-direction: column;
-  width: 280px;
+  width: 300px;
   padding-left: 3px;
 }
 .wrapperparent {
@@ -24,7 +24,13 @@
   font-size: 25px;
   padding: 15px 50px 15px;
   background-color: transparent;
+  transition-duration: 0.4s;
+  cursor: pointer;
   text-align: left;
+}
+.btn:hover {
+  background-color: red;
+  color: white;
 }
 
 .menu {

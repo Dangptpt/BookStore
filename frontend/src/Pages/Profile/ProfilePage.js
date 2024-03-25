@@ -15,10 +15,12 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          width: "200px",
+          width: "400px",
           "& .MuiInputBase-input": {
-            fontSize: "20px",
+            fontSize: "30px",
+            padding: "8px",
           },
+          padding: "0px",
         },
       },
     },
@@ -45,7 +47,7 @@ export default function ProfilePage() {
   const [date, setDate] = useState();
 
   return (
-    <Grid container spacing={1} style={{ padding: "30px", marginLeft: "20px", marginTop: "-35px" }}>
+    <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
       <Grid item xs={12}>
         <h1 style={{ fontSize: "43px" }}>
           Thông tin cá nhân
@@ -53,36 +55,30 @@ export default function ProfilePage() {
       </Grid>
 
       <ThemeProvider theme={theme}>
-
         <Grid item container alignItems="center">
-          <Grid item xs={2}>
-            <Typography style={{fontSize:"24px"}}>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
               Họ và tên
             </Typography>
           </Grid>
-
           <Grid item xs={10}>
             <TextField
-             style={{width: "300px"}}
-             inputProps={{ style: { fontSize: "20px" }, required: true }}
-             ></TextField>
+              style={{ width: "400px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
           </Grid>
         </Grid>
-
+      
         <Grid item container alignItems="center">
-          <Grid item xs={2}>
-            <Typography
-              variant="h4"
-              fontWeight={400}
-              style={{ marginRight: "50px" }}
-            >
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
               Giới tính
             </Typography>
           </Grid>
+
           <Grid item xs={10}>
             <RadioGroup
               name="radio-buttons-group"
-              value={value}
               style={{ display: "inline" }}
             >
               <FormControlLabel
@@ -105,8 +101,8 @@ export default function ProfilePage() {
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Grid item container alignItems="center">
-            <Grid item xs={2}>
-              <Typography variant="h4" fontWeight={400}>
+            <Grid xs={2}>
+              <Typography style={{ fontSize: "24px" }}>
                 Ngày sinh
               </Typography>
             </Grid>
@@ -123,9 +119,9 @@ export default function ProfilePage() {
         </LocalizationProvider>
 
         <Grid item container alignItems="center">
-          <Grid item xs={2}>
-            <Typography variant="h4" fontWeight={400}>
-              Địa chỉ&emsp;&ensp;
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Địa chỉ
             </Typography>
           </Grid>
           <Grid item xs={10}>
@@ -134,14 +130,15 @@ export default function ProfilePage() {
               onChange={(e) => {
                 setAddress(e.target.value);
               }}
+              inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
           </Grid>
         </Grid>
 
         <Grid item container alignItems="center">
-          <Grid item xs={2}>
-            <Typography variant="h4" fontWeight={400}>
-              CCCD&emsp;&ensp;&nbsp;
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              CCCD
             </Typography>
           </Grid>
           <Grid item xs={10}>
@@ -150,30 +147,27 @@ export default function ProfilePage() {
               onChange={(e) => {
                 setCccd(e.target.value);
               }}
+              inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
           </Grid>
         </Grid>
-
         <Grid item container alignItems="center">
-          <Grid item xs={2}>
-            <Typography variant="h4" fontWeight={400}>
-              Email&emsp;&ensp;&nbsp;
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Email
             </Typography>
           </Grid>
           <Grid item xs={10}>
             <TextField
-              value={cccd}
-              onChange={(e) => {
-                setCccd(e.target.value);
-              }}
+              inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
           </Grid>
         </Grid>
 
         <Grid item container alignItems="center">
-          <Grid item xs={2}>
-            <Typography variant="h4" fontWeight={400}>
-              Điện thoại
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Số điện thoại
             </Typography>
           </Grid>
           <Grid item xs={10}>
@@ -182,6 +176,7 @@ export default function ProfilePage() {
               onChange={(e) => {
                 setPhoneNumber(e.target.value);
               }}
+              inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
           </Grid>
         </Grid>

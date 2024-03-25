@@ -30,14 +30,13 @@ export default function LoginPage() {
   }, 1000);
   };
 
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 10,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -46,7 +45,7 @@ export default function LoginPage() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h4">
             Sign in
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
@@ -55,22 +54,26 @@ export default function LoginPage() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Tài khoản"
               name="email"
               autoComplete="email"
               autoFocus
               value = {account}
               onChange={e => changeAccount(e)}
+              inputProps={{style : {fontSize: "20px"}}}
+              InputLabelProps={{ style: { fontSize: "18px" } }}
             />
             <TextField
               margin="normal"
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Mật khẩu"
               type="password"
               id="password"
               autoComplete="current-password"
+              inputProps={{style : {fontSize: "20px"}}}
+              InputLabelProps={{ style: { fontSize: "18px" } }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -80,6 +83,7 @@ export default function LoginPage() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              style={{fontSize: "18px"}}
               onClick={handleLogin}
             >
               Sign In

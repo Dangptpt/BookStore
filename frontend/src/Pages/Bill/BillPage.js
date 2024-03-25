@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Grid, Table, TableBody, TableCell, TableContainer, TableHead,
-  TablePagination, TableRow, TextField, Typography
+  TablePagination, TableRow, TextField, Typography, Paper
 } from "@mui/material";
 import ButtonAdd from "../../component/ButtonAdd";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -14,7 +14,7 @@ import ButtonSearch from "../../component/ButtonSearch";
 
 const CustomizedDateTimePicker = styled(DateTimePicker)`
   & .MuiInputBase-input {
-    font-size: 18px;
+    font-size: 20px;
     width: 220px;
   }
   .MuiInputLabel-root {
@@ -96,10 +96,10 @@ export default function BillPage() {
       </Grid>
 
       <Grid item>
-        <TableContainer >
-          <Table style={{ width: 1300 }} >
+        <TableContainer component={Paper}>
+          <Table style={{ width: 1300, border: "solid",  borderWidth: '1px' }} >
             <TableHead>
-              <TableRow>
+              <TableRow style={{backgroundColor: "#C0C0C0"}}>
                 {tableHead.map((col, index) => (
                   <TableCell key={index}>
                     <Typography

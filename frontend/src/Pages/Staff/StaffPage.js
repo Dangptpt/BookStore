@@ -1,40 +1,44 @@
-import { Container, TableCell, TableHead, TableRow, Table, TableContainer, Paper, TableBody, Grid, Typography } from '@mui/material'
-import React, { useState, useEffect } from 'react'
-import ButtonAdd from '../../component/ButtonAdd'
-import { Link } from 'react-router-dom';
+import {
+  Grid, Table, TableBody, TableCell, TableContainer, TableHead,
+  TablePagination, TableRow, TextField, Typography, Paper
+} from "@mui/material";
+import ButtonAdd from "../../component/ButtonAdd";
+import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import ClassAPi from '../../Apis/Api'
 
 const tableHead = [
   { name: "Số thứ tự" },
-  { name: "Họ tên" },
-  { name: "" },
+  { name: "Tên nhân viên" },
+  { name: "" }
 ];
 
 export default function StaffPage() {
-  const [staffs, setStaffs] = useState([]);
+  const [staffs, setStaffs] = useState([{
+    staffName: "Phùng Thanh Đăng"
+  }]);
 
   return (
-    <Grid container spacing={2} style={{ padding: "50px" }}>
+    <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
       <Grid item xs={12}>
-        <h1 style={{ fontSize: "48px" }}>
+        <h1 style={{ fontSize: "43px" }}>
           Quản lý nhân viên
         </h1>
       </Grid>
 
       <Grid item xs={12} style={{ marginBottom: 30 }}>
-        <ButtonAdd to="/staff/add" title="Thêm nhân viên mới"></ButtonAdd>
+        <ButtonAdd to="/staff/add" title="Thêm nhân viên"></ButtonAdd>
       </Grid>
 
-      <Grid item xs={12}>
-        <TableContainer style={{ marginTop: 20 }} component={Paper}>
-          <Table sx={{ minwidth: 900 }}>
+      <Grid item>
+        <TableContainer component={Paper}>
+          <Table style={{ width: 600, border: "solid", borderWidth: '1px' }} >
             <TableHead>
-              <TableRow>
+              <TableRow style={{ backgroundColor: "#C0C0C0" }}>
                 {tableHead.map((col, index) => (
-                  <TableCell key={index}
-                    style={index === 0 ? { width: "20%" } : index == 1 ? {width : "35%"} : {width : "20%"} }>
+                  <TableCell key={index}>
                     <Typography
-                      variant="h4"
-                      style={{ fontWeight: "bold" }}
+                      style={{ fontWeight: "600", fontSize: "22px" }}
                       padding={0}>
                       {col.name}
                     </Typography>
@@ -43,19 +47,28 @@ export default function StaffPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {staffs &&
-                staffs.map((data, index) =>
-                  <TableRow>
-                    <TableCell style={{ fontSize: 18 }}>{index + 1}</TableCell>
-                    <TableCell style={{ fontSize: 18 }}>{data.userName}</TableCell>
-                    <TableCell style={{ fontSize: 18 }}><Link to={'/staff/edit/' + data.userId}>Chi tiết</Link></TableCell>
-                  </TableRow>
-                )}
+              {staffs.map(
+                  (column, index) =>
+                    column &&
+                    column.staffName !== null && (
+                      <TableRow key={index}>
+                        <TableCell style={{ fontSize: "20px", width: '150px' }} >
+                          {index + 1}
+                        </TableCell>
+                        <TableCell style={{ fontSize: '20px', width: '260px' }}>{column.staffName}</TableCell>
+                        <TableCell>
+                          <Link to={"/staff/edit/" + column.bookId}>
+                            <Typography style={{ fontSize: "18px" }}>
+                              Chi tiết
+                            </Typography>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Grid>
-
     </Grid>
-  )
+  );
 }

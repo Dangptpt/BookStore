@@ -14,7 +14,7 @@ import { LoginIcon } from "../../../Icons/LoginIcon";
 const cx = classNames.bind(styles);
 
 function SideBarStaff() {
-  const [user, setUser] = useState("hoang");
+  const [user, setUser] = useState("dang");
   const navigate = useNavigate();
   const handleLogin = () => {
     navigate("/");
@@ -100,7 +100,6 @@ function SideBarStaff() {
                 justifyContent: "flex-start",
                 paddingLeft: "35px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -124,7 +123,6 @@ function SideBarStaff() {
                 justifyContent: "flex-start",
                 paddingLeft: "50px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -138,7 +136,7 @@ function SideBarStaff() {
               style={{
                 backgroundColor: "#f9bf89",
                 width: "80%",
-                marginLeft: "10px",
+                marginLeft: "25px",
                 borderRadius: "10px",
                 fontSize: "25px",
                 padding: "0px 5px",
@@ -147,7 +145,7 @@ function SideBarStaff() {
               }}
               onClick={() => {
                 setUser("");
-                sessionStorage.setItem("user", null);
+                sessionStorage.setItem("role", null);
                 navigate('/')
               }}
               startIcon={<LogoutIcon />}
@@ -159,7 +157,7 @@ function SideBarStaff() {
               style={{
                 backgroundColor: "#f9bf89",
                 width: "80%",
-                marginLeft: "10px",
+                marginLeft: "25px",
                 borderRadius: "10px",
                 fontSize: "25px",
                 padding: "0px 5px",

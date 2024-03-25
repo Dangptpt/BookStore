@@ -14,7 +14,7 @@ import { PromotionIcon } from "../../../Icons/PromotionIcon";
 const cx = classNames.bind(styles);
 
 function SideBarManager() {
-  const [user, setUser] = useState("hoang");
+  const [user, setUser] = useState("dang");
   const navigate = useNavigate();
   const handleLogin = () => {
     navigate("/");
@@ -26,7 +26,7 @@ function SideBarManager() {
           <h1>Phần mềm</h1>
           <h1>quản lý hiệu sách</h1>
         </div>
-
+      
         <div className={cx("menu")}>
         <NavLink to="/book">
             <Button
@@ -39,7 +39,6 @@ function SideBarManager() {
                 justifyContent: "flex-start",
                 paddingLeft: "35px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -60,7 +59,6 @@ function SideBarManager() {
                 justifyContent: "flex-start",
                 paddingLeft: "35px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -81,7 +79,6 @@ function SideBarManager() {
                 justifyContent: "flex-start",
                 paddingLeft: "35px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -102,7 +99,6 @@ function SideBarManager() {
                 justifyContent: "flex-start",
                 paddingLeft: "35px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -126,7 +122,6 @@ function SideBarManager() {
                 justifyContent: "flex-start",
                 paddingLeft: "50px",
                 borderRadius: "10px",
-
                 paddingBottom: "4px",
               }}
               className={cx("btn")}
@@ -140,7 +135,7 @@ function SideBarManager() {
               style={{
                 backgroundColor: "#f9bf89",
                 width: "80%",
-                marginLeft: "10px",
+                marginLeft: "25px",
                 borderRadius: "10px",
                 fontSize: "25px",
                 padding: "0px 5px",
@@ -149,7 +144,7 @@ function SideBarManager() {
               }}
               onClick={() => {
                 setUser("");
-                sessionStorage.setItem("user", null);
+                sessionStorage.setItem("role", null);
                 navigate('/')
               }}
               startIcon={<LogoutIcon />}
@@ -161,7 +156,7 @@ function SideBarManager() {
               style={{
                 backgroundColor: "#f9bf89",
                 width: "80%",
-                marginLeft: "10px",
+                marginLeft: "25px",
                 borderRadius: "10px",
                 fontSize: "25px",
                 padding: "0px 5px",

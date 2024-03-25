@@ -4,9 +4,9 @@ import { ToastContainer } from "react-toastify";
 import ManagerLayout from "./Layout/ManagerLayout.js";
 import StaffLayout from "./Layout/StaffLayout.js";
 
-const role = sessionStorage.getItem("role");
 
 function App() {
+  const role = sessionStorage.getItem("role");
   return (
     <div>
       <Router>

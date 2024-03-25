@@ -1,5 +1,5 @@
 import {Grid, Table, TableBody, TableCell, TableContainer, TableHead,
-        TablePagination, TableRow, TextField, Typography} from "@mui/material";
+        TablePagination, TableRow, TextField, Typography, Paper} from "@mui/material";
 import ButtonAdd from "../../component/ButtonAdd";
 import ButtonSearch from "../../component/ButtonSearch";
 import { Link, NavLink } from "react-router-dom";
@@ -15,7 +15,7 @@ const tableHead = [
   { name: "Giá tiền"},
   { name: "" }
 ];
-function ResidencePage() {
+export default function BookPage() {
   const [books, setBooks] = useState([{
     bookName: "Sherlock Holmes", 
     category: "Detective", 
@@ -73,10 +73,10 @@ function ResidencePage() {
       </Grid>
 
       <Grid item>
-        <TableContainer >
-          <Table style={{ width: 1500 }} >
+        <TableContainer component={Paper}>
+          <Table style={{ width: 1500, border: "solid",  borderWidth: '1px' }} >
             <TableHead>
-              <TableRow>
+              <TableRow style={{backgroundColor: "#C0C0C0"}}>
                 {tableHead.map((col, index) => (
                   <TableCell key={index}>
                     <Typography
@@ -162,4 +162,3 @@ function ResidencePage() {
   );
 }
 
-export default ResidencePage;

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { Grid, Typography, TextField, Paper, Button, ThemeProvider, createTheme } from "@mui/material";
+import { Grid, Typography, TextField, Button, ThemeProvider, createTheme } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { NavLink } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -14,7 +14,7 @@ const theme = createTheme({
           width: "400px",
           "& .MuiInputBase-input": {
             fontSize: "30px",
-            padding: "5px",
+            padding: "8px",
           },
           padding: "0px",
         },
@@ -43,111 +43,109 @@ export default function BookAddPage() {
       </Grid>
 
       <ThemeProvider theme={theme}>
-        <Grid item container alignItems="center">
 
         <Grid item container alignItems="center">
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px" }}>
-                Tên sách
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                style={{ width: "400px", marginLeft: "-50px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Tên sách
+            </Typography>
           </Grid>
-
-          <Grid item container alignItems="center" sx={{ mt: 3 }}>
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px" }}>
-                Thể loại
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                style={{ width: "400px", marginLeft: "-50px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
+          <Grid item xs={10}>
+            <TextField
+              style={{ width: "400px", marginLeft: "-50px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
           </Grid>
-
-          <Grid item container alignItems="center" sx={{ mt: 3 }}>
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px" }}>
-                Tác giả
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                style={{ width: "400px", marginLeft: "-50px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
-          </Grid>
-
-
-          <Grid item container alignItems="center" sx={{ mt: 3 }}>
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px" }}>
-                Nhà xuất bản
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                style={{ width: "400px", marginLeft: "-50px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
-          </Grid>
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid item container alignItems="center" sx={{ mt: 3 }}>
-              <Grid item xs={2}>
-                <Typography style={{ fontSize: "24px"}}>
-                  Ngày xuất bản
-                </Typography>
-              </Grid>
-              <Grid item xs={10} style={{  marginLeft: "-50px" }}>
-                <CustomizedDatePicker
-                  format="DD-MM-YYYY"
-                ></CustomizedDatePicker>
-              </Grid>
-            </Grid>
-          </LocalizationProvider>
-
-          <Grid item container alignItems="center" sx={{ mt: 3 }}>
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px" }}>
-                Giá tiền
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                type = "price"
-                style={{ width: "400px", marginLeft: "-50px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
-          </Grid>
-
-          <Grid item container alignItems="center" sx={{ mt: 3 }}>
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px" }}>
-                Số lượng
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                type = "number"
-                style={{ width: "400px", marginLeft: "-50px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
-          </Grid>
-
         </Grid>
+
+        <Grid item container alignItems="center" sx={{ mt: 1 }}>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Thể loại
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              style={{ width: "400px", marginLeft: "-50px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
+          </Grid>
+        </Grid>
+
+        <Grid item container alignItems="center" sx={{ mt: 1 }}>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Tác giả
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              style={{ width: "400px", marginLeft: "-50px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
+          </Grid>
+        </Grid>
+
+
+        <Grid item container alignItems="center" sx={{ mt: 1 }}>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Nhà xuất bản
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              style={{ width: "400px", marginLeft: "-50px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
+          </Grid>
+        </Grid>
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Grid item container alignItems="center" sx={{ mt: 1 }}>
+            <Grid item xs={2}>
+              <Typography style={{ fontSize: "24px" }}>
+                Ngày xuất bản
+              </Typography>
+            </Grid>
+            <Grid item xs={10} style={{ marginLeft: "-50px" }}>
+              <CustomizedDatePicker
+                format="DD-MM-YYYY"
+              ></CustomizedDatePicker>
+            </Grid>
+          </Grid>
+        </LocalizationProvider>
+
+        <Grid item container alignItems="center" sx={{ mt: 1 }}>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Giá tiền
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              type="price"
+              style={{ width: "400px", marginLeft: "-50px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
+          </Grid>
+        </Grid>
+
+        <Grid item container alignItems="center" sx={{ mt: 1 }}>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px" }}>
+              Số lượng
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              type="number"
+              style={{ width: "400px", marginLeft: "-50px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
+          </Grid>
+        </Grid>
+
       </ThemeProvider>
 
       <Grid item sx={{ mt: 2 }}>
