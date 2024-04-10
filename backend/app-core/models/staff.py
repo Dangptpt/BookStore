@@ -3,7 +3,8 @@ from datetime import date
 from .enums import Role, Gender
 
 class StaffBase(BaseModel):
-    username: str 
+    staff_code: str 
+    
 class StaffInfo(StaffBase):
     name: str
     address: str
@@ -16,9 +17,6 @@ class StaffInfo(StaffBase):
 
 class StaffLogin(BaseModel):
     password: str
-
-class Staff(StaffInfo, StaffBase):
-    pass
 
 class StaffRegister(StaffLogin, StaffInfo, StaffBase):
     pass

@@ -1,12 +1,13 @@
 from pydantic import BaseModel
+
 class BookInfo(BaseModel):
     name: str
     category: str
     author: str
-    price: float
+    price: int
     publish_year: int | None
     publish_company: str | None
-    quantity: int
 
-class Book(BookInfo):
+class Book(BaseModel):
     book_id: int
+    quantity: int
