@@ -12,7 +12,6 @@ class ImportInfo(BaseModel):
     delivery_name: str
     description: str | None = None
     cost: int
-    date_created: datetime
 
 class Import(ImportInfo):
     import_id: int

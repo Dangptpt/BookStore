@@ -42,10 +42,9 @@ async def get_by_element(
       end_time = date.max
     if start_time == None:
       start_time = date.min
-
-    import_bills = supabase.table('import_bill').select(
-      'id', 'customer_name', 'time_created', 'amount').gte(
-        'time_created', start_time).lte('time_created', end_time).execute().data
+    print (start_time, end_time)
+    import_bills = supabase.table('import_bill').select('*').gte(
+      'date_created', start_time).lte('date_created', end_time).execute().data
     return import_bills
   
   except:
@@ -55,7 +54,7 @@ async def get_by_element(
 async def create_import(
   supabase: Annotated[Client, Depends(get_supabase)],
   import_info: ImportInfo,
-  import_list: ImportList
+  import_list: List[ImportList]
 ):
   try:
     data = {
@@ -64,10 +63,11 @@ async def create_import(
       'supplier': import_info.supplier,
       'delivery_name': import_info.delivery_name,
       'description': import_info.description,
-      'date_created': date.today(),
+      'date_created': date.today().strftime("%Y-%m-%d"),
       'cost': import_info.cost,
-      'list_import': json.loads(json.dumps(import_list, default=lambda o: o.__dict__))
+      'import_list': json.loads(json.dumps(import_list, default=lambda o: o.__dict__))
     }
+    print(data)
     supabase.table('import_bill').insert(data).execute()
 
     return {"detail": "success"} 
@@ -75,3 +75,14 @@ async def create_import(
     return BAD_REQUEST
   
     
+@router.patch('')
+async def edit_import_bill(
+  supabase: Annotated[Client, Depends(get_supabase)],
+  import_info: ImportInfo,
+  id: int,
+):
+  try:
+    supabase.table('import_bill').update(jsonable_encoder(import_info)).eq("id", id).execute()
+    return {"detail": "success"}
+  except:
+    raise BAD_REQUEST

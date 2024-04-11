@@ -15,8 +15,12 @@ class StaffInfo(StaffBase):
     role: Role = Role.user
     email: str = Field(example="dangptpt@gmail.com")
 
-class StaffLogin(BaseModel):
+class StaffLogin(StaffBase):
     password: str
 
+class Password(BaseModel):
+    old_password: str
+    new_password: str
+    
 class StaffRegister(StaffLogin, StaffInfo, StaffBase):
     pass

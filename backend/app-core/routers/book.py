@@ -22,7 +22,7 @@ async def get_book_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
   id: int 
 ):
-  res = supabase.table("book").select('quantity').eq("id", id).execute().data
+  res = supabase.table("book").select('*').eq("id", id).execute().data
   return res
  
 @router.get("/", description='get book by name, author and category')
