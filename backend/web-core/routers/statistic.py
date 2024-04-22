@@ -35,3 +35,4 @@ async def get_statistic_by_day(
     }
   except:
     return BAD_REQUEST
+

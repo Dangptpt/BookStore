@@ -16,11 +16,6 @@ NOT_FOUND = HTTPException(
     detail="Email not found",
 )
 
-CONFLICT = HTTPException(
-    status_code=status.HTTP_409_CONFLICT,
-    detail="User already exists",
-)
-
 FORBIDDEN = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
     detail="You don't have permission to access this resource",
