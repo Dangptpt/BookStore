@@ -2,6 +2,7 @@ from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import book, bill, import_bill, staff, statistic, auth
+
 app = FastAPI()
 
 app.include_router(book.router)
@@ -22,3 +23,8 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return RedirectResponse(url="/docs")
+
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", reload=True)
