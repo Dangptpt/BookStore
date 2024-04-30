@@ -1,12 +1,16 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from utils.exceptions import BAD_REQUEST, UNAUTHORIZED
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, APIRouter
+from supabase import Client
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from jose import JWTError, jwt
 from dotenv import load_dotenv
+from models.staff import StaffLogin
+from models.token import TokenData
+from database.db_service import get_supabase
 import os
 
 load_dotenv()
@@ -15,13 +19,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 3600
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 app = FastAPI()
+
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

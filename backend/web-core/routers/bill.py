@@ -7,12 +7,14 @@ from typing import Annotated, List
 from database.db_service import get_supabase
 from datetime import datetime
 import json
+from utils.auth import get_current_user
 
 router = APIRouter(tags=["Bill"], prefix="/bill")
 
 @router.get("/all")
 async def get_all_bills(
   supabase: Annotated[Client, Depends(get_supabase)],
+  user = Depends(get_current_user)
 ):
   try:
     bill_list = supabase.table('bill').select('*').execute().data
@@ -23,7 +25,8 @@ async def get_all_bills(
 @router.get("/{id}")
 async def get_bill_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
-  id: int
+  id: int,
+  user = Depends(get_current_user)
 ):
   try:
     bill = supabase.table('bill').select('*').eq('id', id).execute().data
@@ -36,7 +39,8 @@ async def get_bill_by_element(
   supabase: Annotated[Client, Depends(get_supabase)],
   start_time: datetime | None = None,
   end_time: datetime | None = None,
-  bill_id: int | None = None
+  bill_id: int | None = None,
+  user = Depends(get_current_user)
 ):
   try:
     if end_time == None:
@@ -57,7 +61,8 @@ async def get_bill_by_element(
 async def create_bill(
   supabase: Annotated[Client, Depends(get_supabase)],
   bill_info: BillInfo,
-  bill_payments: List[BillPayment]
+  bill_payments: List[BillPayment],
+  user = Depends(get_current_user)
 ):
   try:
       data = {
@@ -83,6 +88,7 @@ async def edit_bill(
   supabase: Annotated[Client, Depends(get_supabase)],
   bill_id: int,
   bill_info: BillInfo,
-  bill_payment: BillPayment
+  bill_payment: BillPayment,
+  user = Depends(get_current_user)
 ):
   pass

@@ -7,12 +7,15 @@ from typing import Annotated, List
 from database.db_service import get_supabase
 from datetime import date
 import json
+from utils.auth import get_current_user
+
 
 router = APIRouter(tags=["Import"], prefix="/import")
 
 @router.get("/all")
 async def get_all_import(
   supabase: Annotated[Client, Depends(get_supabase)],
+  user = Depends(get_current_user)
 ):
   try:
     res = supabase.table('import_bill').select('code', 'staff_name', 'id', 'date_created').execute().data
@@ -23,7 +26,8 @@ async def get_all_import(
 @router.get("/{id}")
 async def get_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
-  import_id: int
+  import_id: int,
+  user = Depends(get_current_user)
 ):
   try:
     res = supabase.table('import_bill').select('*').eq('id', import_id).execute().data
@@ -36,6 +40,7 @@ async def get_by_element(
   supabase: Annotated[Client, Depends(get_supabase)],
   start_time: date | None = None,
   end_time: date | None = None,
+  user = Depends(get_current_user)
 ):
   try:
     if end_time == None:
@@ -54,7 +59,8 @@ async def get_by_element(
 async def create_import(
   supabase: Annotated[Client, Depends(get_supabase)],
   import_info: ImportInfo,
-  import_list: List[ImportList]
+  import_list: List[ImportList],
+  user = Depends(get_current_user)
 ):
   try:
     data = {
@@ -80,6 +86,7 @@ async def edit_import_bill(
   supabase: Annotated[Client, Depends(get_supabase)],
   import_info: ImportInfo,
   id: int,
+  user = Depends(get_current_user)
 ):
   try:
     supabase.table('import_bill').update(jsonable_encoder(import_info)).eq("id", id).execute()

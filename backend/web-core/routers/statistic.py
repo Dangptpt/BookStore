@@ -6,12 +6,15 @@ from typing import Annotated, List
 from database.db_service import get_supabase
 from datetime import date, datetime
 import json
+from utils.auth import get_current_user
+
 
 router = APIRouter(tags=["Statistic"], prefix="/statistic")
 
 @router.get('today')
 async def get_statistic_by_day(
-  supabase: Annotated[Client, Depends(get_supabase)]
+  supabase: Annotated[Client, Depends(get_supabase)],
+  user = Depends(get_current_user)
 ):
   try:
     start = datetime(year=datetime.now().year, month=datetime.now().month, day=datetime.now().day, hour=0, minute=0, second=0)

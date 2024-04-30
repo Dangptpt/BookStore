@@ -5,7 +5,8 @@ from models.book import BookInfo, Book
 from utils.exceptions import BAD_REQUEST
 from typing import Annotated, List
 from database.db_service import get_supabase
-import string
+from utils.auth import get_current_user
+
 
 router = APIRouter(tags=["Book"], prefix="/book")
 
@@ -13,6 +14,7 @@ router = APIRouter(tags=["Book"], prefix="/book")
 @router.get("/all", description="Get list of all books")
 async def get_all_book(
   supabase: Annotated[Client, Depends(get_supabase)],
+  user = Depends(get_current_user)
 ):
   res = supabase.table("book").select('*').execute().data
   return res
@@ -20,7 +22,8 @@ async def get_all_book(
 @router.get("/{id}", description="Get book by id")
 async def get_book_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
-  id: int 
+  id: int,
+  user = Depends(get_current_user)
 ):
   res = supabase.table("book").select('*').eq("id", id).execute().data
   return res
@@ -30,7 +33,8 @@ async def get_book_by_elements(
   supabase: Annotated[Client, Depends(get_supabase)],
   name: str | None = None,
   author: str | None = None,
-  category: str | None = None
+  category: str | None = None,
+  user = Depends(get_current_user)
 ):
   if name == None:
     name = '\0'
@@ -57,6 +61,7 @@ async def get_book_by_elements(
 async def postBook(
     supabase: Annotated[Client, Depends(get_supabase)],
     book_info: BookInfo,
+    user = Depends(get_current_user)
 ):
   try:
     supabase.table('book').insert(jsonable_encoder(book_info)).execute()
@@ -68,7 +73,8 @@ async def postBook(
 async def eidt_book(
   supabase: Annotated[Client, Depends(get_supabase)],
   book_info: BookInfo,
-  book_id: int
+  book_id: int,
+  user = Depends(get_current_user)
 ):
   try:
     supabase.table('book').update(jsonable_encoder(book_info)).eq("id", book_id).execute()
@@ -79,7 +85,8 @@ async def eidt_book(
 @router.patch("quantity")
 async def eidt_quantity_book(
   supabase: Annotated[Client, Depends(get_supabase)],
-  books: List[Book]
+  books: List[Book],
+  user = Depends(get_current_user)
 ):
   try:
     for book in books:

@@ -9,10 +9,9 @@ from datetime import datetime, timedelta, timezone
 from models.token import Token, TokenData
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from utils.auth import verify_password, get_password_hash, create_access_token, get_current_user
+from utils.auth import get_password_hash, get_current_user
 
 router = APIRouter(tags=["Staff"], prefix="/staff")
-
 
 @router.get("/all")
 async def get_all_staffs(
@@ -20,7 +19,6 @@ async def get_all_staffs(
     user = Depends(get_current_user)
 ):
   try:
-    print (user)
     if user['role'] != 'admin':
       return FORBIDDEN
     return supabase.table('staff').select('staff_code', 'name', 'id').execute().data
@@ -31,9 +29,12 @@ async def get_all_staffs(
 @router.get('/{id}')
 async def get_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
-  staff_id: int
+  staff_id: int,
+  user = Depends(get_current_user),
 ):
   try:
+    if user['role'] != 'admin':
+      return FORBIDDEN
     res = supabase.table('staff').select('*').eq('id', staff_id).execute().data
     return res
   except:
@@ -42,9 +43,12 @@ async def get_by_id(
 @router.post('')
 async def create_new_staff(
   supabase: Annotated[Client, Depends(get_supabase)],
-  staff_register: StaffRegister
+  staff_register: StaffRegister,
+  user = Depends(get_current_user),
 ):
   try:
+    if user['role'] != 'admin':
+        return FORBIDDEN
     staff_register.password = get_password_hash(staff_register.password)
     data = jsonable_encoder(staff_register)
     print(data)
@@ -54,57 +58,17 @@ async def create_new_staff(
     return BAD_REQUEST
 
 
-@router.post('/login')
-async def login(
-  supabase: Annotated[Client, Depends(get_supabase)],
-  login: StaffLogin
-):
-  try:
-    user = supabase.table('staff').select('*').eq('staff_code', login.staff_code).execute().data
-    if len(user) == 0:
-      return {"detail": "failed",
-              "description": 'User name doesn\'t exist'}
-    
-    if verify_password(login.password, user[0]['password']) == True: 
-      token_data = TokenData(id=user[0]['id'], staff_code=user[0]['staff_code'], 
-                             role= user[0]['role'], name= user[0]['name'])
-      access_token = create_access_token(token_data.dict())
-      return Token(access_token=access_token, token_type='bearer')
-        
-    else:
-      return {"detail": "failed",
-              "description": 'invalid password'}
-    
-  except:
-    return BAD_REQUEST
-
-
 @router.patch('/info')
 async def edit_infomation(
   supabase: Annotated[Client, Depends(get_supabase)],
   staff_info: StaffInfo,
-  staff_id: int
+  staff_id: int,
+  user = Depends(get_current_user),
 ):
   try:
+    if user['role'] != 'user':
+      return FORBIDDEN
     supabase.table('staff').update(jsonable_encoder(staff_info)).eq('id', staff_id).execute().data
     return {"detail": "success"}
-  except:
-    return BAD_REQUEST
-
-
-@router.patch('/password')
-async def change_password(
-  supabase: Annotated[Client, Depends(get_supabase)],
-  password: Password,
-  staff_id: int
-):
-  try:
-    oldpassword = supabase.table('staff').select('password').eq('id', staff_id).execute().data[0]['password']
-    if verify_password(password.old_password, oldpassword) == True:
-      supabase.table('staff').update({'password': get_password_hash(password.new_password)}).eq('id', staff_id).execute()
-      return {"detail": "success"}
-    else:
-      return {"detail": "failed",
-              "description": 'invalid old password'}
   except:
     return BAD_REQUEST
