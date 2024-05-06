@@ -11,8 +11,8 @@ function StaffLayout({ children }) {
   return (
     <div className={cx("wrapper")}>
       <SideBarStaff className={cx("sidebar")} />
-      <div className={cx("children")}>{user != "" ? children : <Typography variant="h3">Hãy đăng nhập để thao tác
-      </Typography> }</div>
+      <div className={cx("children")}>{user != 'null' ? children : <p style={{marginLeft: '50px', fontSize: '40px'}}>Hãy đăng nhập để thao tác
+      </p> }</div>
     </div>
   );
 }

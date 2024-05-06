@@ -8,8 +8,8 @@ function ManagerLayout({ children }) {
     return (
         <div className={cx("wrapper")}>
             <SideBarManager className={cx("sidebar")} />
-            <div className={cx("children")}>{user != "" ? children : <Typography variant="h3">Hãy đăng nhập để thao tác
-      </Typography> }</div>
+            <div className={cx("children")}>{user === 'admin' ? children : <p style={{ marginLeft: '50px', fontSize: '40px' }}>Hãy đăng nhập để thao tác
+            </p>}</div>
         </div>
     );
 }

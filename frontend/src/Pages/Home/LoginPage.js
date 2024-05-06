@@ -14,20 +14,46 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ClassApi, { API_BASE_URL } from "../../Apis/Api";
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from 'react-toastify'
 
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [account, setAccount] = useState('')
+  const [password, setPassword] = useState('')
+  
   const changeAccount = (e) => {
     setAccount(e.target.value)
   }
+  const changePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
   const handleLogin = () => {
-    if (account === 'admin') sessionStorage.setItem('role', "admin");
-    else sessionStorage.setItem('role', 'user');
-    setTimeout(() => {navigate("/home")
-  }, 1000);
+    console.log(account, password)
+    ClassApi.postLogin(account, password).then((response) => {
+      console.log (response.data)
+      if (response.data.detail === "success") {
+        sessionStorage.setItem('staff_code', response.data.staff_code);
+        sessionStorage.setItem('role', response.data.role);
+        sessionStorage.setItem('name', response.data.name);
+        sessionStorage.setItem('token', response.data.token.access_token);
+
+        setTimeout(() => {
+          navigate("/home")
+          navigate(0)
+        }, 500);
+      } else {
+        toast.warning(response.data.description)
+      }
+    }).catch((error) => {
+      toast.error("Lỗi đăng nhập")
+      console.error('Error fetching data:', error);
+    });
+
   };
 
   return (
@@ -71,6 +97,8 @@ export default function LoginPage() {
               label="Mật khẩu"
               type="password"
               id="password"
+              value={password}
+              onChange={e => changePassword(e)}
               autoComplete="current-password"
               inputProps={{style : {fontSize: "20px"}}}
               InputLabelProps={{ style: { fontSize: "18px" } }}

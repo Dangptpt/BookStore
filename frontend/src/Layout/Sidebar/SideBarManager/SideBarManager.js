@@ -130,7 +130,7 @@ function SideBarManager() {
               Hồ sơ
             </Button>
           </NavLink>
-          {(user && sessionStorage.getItem("role") != "null") ? (
+          {(user && sessionStorage.getItem("role") != null) ? (
             <Button
               style={{
                 backgroundColor: "#f9bf89",

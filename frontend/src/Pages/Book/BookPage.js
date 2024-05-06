@@ -16,16 +16,13 @@ const tableHead = [
   { name: "" }
 ];
 export default function BookPage() {
-  const [books, setBooks] = useState([{
-    bookName: "Sherlock Holmes", 
-    category: "Detective", 
-    authorName: "Conan Doyle", 
-    quantity: 1, 
-    price: 400000}]);
+  const [books, setBooks] = useState([]);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [name, setName] = useState('')
+  const [author, setAuthor] = useState('')
+  const [category, setCategory] = useState('')
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -34,7 +31,17 @@ export default function BookPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  const handleSearchBook = () => {
+    setPage(0)
+    ClassAPi.getBookByElement(name, author, category)
+      .then((res) => {
+        console.log (res.data)
+        setBooks(res.data)
+      })
+      .catch((err) => {
+        console.log(err.message)
+      })
+  }
   const check = sessionStorage.getItem("role");
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
@@ -55,6 +62,8 @@ export default function BookPage() {
           label="Tên sách"
           variant="filled"
           style={{ marginRight: "35px" }}
+          value={name}
+          onChange={e => setName(e.target.value)}
           inputProps={{ style: { fontSize: "20px" } }}
           InputLabelProps={{ style: { fontSize: "20px" } }}
         />
@@ -63,13 +72,15 @@ export default function BookPage() {
           label="Thể loại"
           variant="filled"
           style={{ marginRight: "35px" }}
+          value={category}
+          onChange={e => setCategory(e.target.value)}
           inputProps={{ style: { fontSize: "20px" } }}
           InputLabelProps={{ style: { fontSize: "20px" } }}
         />
       </Grid>
 
       <Grid item >
-        <ButtonSearch onclick={() => { }} title="Tìm kiếm sách"></ButtonSearch>
+        <ButtonSearch onclick={handleSearchBook} title="Tìm kiếm sách"></ButtonSearch>
       </Grid>
 
       <Grid item>
@@ -105,13 +116,13 @@ export default function BookPage() {
                             {page * rowsPerPage + index + 1}
                         </TableCell>
 
-                        <TableCell style={{ fontSize: '20px', width: '260px' }}>{column.bookName}</TableCell>
+                        <TableCell style={{ fontSize: '20px', width: '260px' }}>{column.name}</TableCell>
                         <TableCell style={{ fontSize: '20px', width: '200px' }}>{column.category}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.authorName}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{column.author}</TableCell>
                         <TableCell style={{ fontSize: '20px' }}>{column.quantity}</TableCell>
                         <TableCell style={{ fontSize: '20px' }}>{column.price}</TableCell>
                         <TableCell>
-                          <Link to={"/book/edit/" + column.bookId}>
+                          <Link to={"/book/edit/" + column.id}>
                             <Typography style={{ fontSize: "18px" }}>
                               Chi tiết
                             </Typography>

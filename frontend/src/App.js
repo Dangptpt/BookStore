@@ -13,7 +13,8 @@ function App() {
         <Routes>
           {publicRoutes.map((route, index) => {
             const Page = route.component;
-            let Layout = (role == "admin") ? ManagerLayout : StaffLayout
+            console.log(role)
+            let Layout = (role === "admin") ? ManagerLayout : StaffLayout
             if (route.layout) {
               Layout = route.layout;
             }
