@@ -9,8 +9,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { styled } from "@mui/system";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ButtonSearch from "../../component/ButtonSearch";
+import ClassAPi from '../../Apis/Api'
 
 const CustomizedDateTimePicker = styled(DateTimePicker)`
   & .MuiInputBase-input {
@@ -24,15 +25,46 @@ const CustomizedDateTimePicker = styled(DateTimePicker)`
 
 export default function BillPage() {
   const navigate = useNavigate();
-  const [bills, setBills] = useState([{
-    billCode: "MB240324001",
-    customerName: "Phùng Thanh Đăng",
-    paymentTime: "24-03-2024 08:14:20",
-    cost: 800000
-  }]);
+  const [bills, setBills] = useState([]);
+  const [startTime, setStartTime] = useState(null)
+  const [endTime, setEndTime] = useState(null)
+  useEffect(() => {
+    ClassAPi.getAllBill()
+      .then((respone) => {
+        setBills(respone.data);
+        console.log(respone.data)
+        console.log(bills)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []);
+
+  const handleSearchBill = () => {
+    const offsetMinutes = 7 * 60 * 60000;
+    let starttime = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
+    let endtime = new Date(Date.UTC(9999, 11, 31, 23, 59, 59, 999));
+    if (startTime != null)
+      if (startTime.toString() != 'Invalid Date' )
+        starttime = new Date(startTime + offsetMinutes);
+    if (endTime != null)
+      if (endTime.toString() != 'Invalid Date' )
+        endtime = new Date(endTime + offsetMinutes);
+    console.log(starttime, endtime)
+    console.log(starttime.toISOString(), endtime.toISOString())
+  
+    setPage(0);
+    ClassAPi.getBillByElement(starttime.toISOString(), endtime.toISOString())
+    .then((res) => {
+      console.log (res.data)
+      setBills(res.data)
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
+  } 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -44,15 +76,12 @@ export default function BillPage() {
 
   const tableHead = [
     { name: "Số thứ tự" },
-    { name: "Mã hóa đơn" },
+    { name: "Tên thu ngân" },
     { name: "Tên khách hàng" },
     { name: "Thời gian" },
     { name: "Số tiền" },
     { name: "" }
   ];
-
-  const handleSearch = () => {
-  };
 
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
@@ -68,31 +97,26 @@ export default function BillPage() {
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Grid item xs={12} marginTop={"15px"}>
-          <TextField
-            label="Mã hóa đơn"
-            variant="filled"
-            style={{ marginRight: "35px" }}
-            inputProps={{ style: { fontSize: "20px" } }}
-            InputLabelProps={{ style: { fontSize: "20px" } }}
-          />
-
           <CustomizedDateTimePicker
             label="Thời gian bắt đầu"
             slotProps={{ textField: { variant: "filled" } }}
             sx={{ marginRight: "35px" }}
             format="DD-MM-YYYY hh-mm A"
+            value={startTime}
+            onChange={(datetime) => setStartTime(datetime)}
           />
           <CustomizedDateTimePicker
+            value = {endTime}
             label="Thời gian kết thúc"
             slotProps={{ textField: { variant: "filled" } }}
             format="DD-MM-YYYY hh-mm A"
+            onChange={(datetime) => setEndTime(datetime)}
           />
         </Grid>
       </LocalizationProvider>
 
-
       <Grid item marginRight={"500px"}>
-        <ButtonSearch onclick={() => { }} title="Tìm kiếm hóa đơn"></ButtonSearch>
+        <ButtonSearch onclick={handleSearchBill} title="Tìm kiếm hóa đơn"></ButtonSearch>
       </Grid>
 
       <Grid item>
@@ -128,12 +152,12 @@ export default function BillPage() {
                           {page * rowsPerPage + index + 1}
                         </TableCell>
 
-                        <TableCell style={{ fontSize: '20px', width: '200px' }}>{column.billCode}</TableCell>
-                        <TableCell style={{ fontSize: '20px', width: '300px' }}>{column.customerName}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.paymentTime}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.cost}</TableCell>
+                        <TableCell style={{ fontSize: '20px', width: '250px' }}>{column.cashier_name}</TableCell>
+                        <TableCell style={{ fontSize: '20px', width: '250px' }}>{column.customer_name}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{column.time_created}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{column.amount}</TableCell>
                         <TableCell>
-                          <Link to={"/bill/edit/" + column.bookId}>
+                          <Link to={"/bill/edit/" + column.id}>
                             <Typography style={{ fontSize: "18px" }}>
                               Chi tiết
                             </Typography>

@@ -1,10 +1,13 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Grid, Typography, TextField, Button, ThemeProvider, createTheme } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { NavLink } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import styled from "@emotion/styled";
+import Book from "../../Models/Book"
+import ClassAPi from '../../Apis/Api'
+import { ToastContainer, toast } from 'react-toastify'
 
 const theme = createTheme({
   components: {
@@ -13,7 +16,7 @@ const theme = createTheme({
         root: {
           width: "400px",
           "& .MuiInputBase-input": {
-            fontSize: "30px",
+            fontSize: "20px",
             padding: "8px",
           },
           padding: "0px",
@@ -34,6 +37,45 @@ const CustomizedDatePicker = styled(DatePicker)`
 `;
 
 export default function BookAddPage() {
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('');
+  const [author, setAuthor] = useState('');
+  const [publish_company, setPublish_Company] = useState('');
+  const [publish_year, setPublish_Year] = useState();
+  const [price, setPrice] = useState();
+  const handleChangeName = (e) => {
+    setName(e.target.value)
+  }
+  const handleChangeAuthor = (e) => {
+    setAuthor(e.target.value)
+  }
+  const handleChangeCategory = (e) => {
+    setCategory(e.target.value)
+  }
+  const handleChangeCompany = (e) => {
+    setPublish_Company(e.target.value)
+  }
+  const handleChangeYear = (e) => {
+    setPublish_Year(e.target.value)
+  }
+  const handleChangePrice = (e) => {
+    setPrice(e.target.value)
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const book = new Book(name, author, category, publish_year, publish_company, price)
+    console.log(book)
+    ClassAPi.postNewBook(book)
+      .then((respone) => {
+        toast.success('Thêm sách thành công')
+        console.log(respone)
+      })
+      .catch((err) => {
+        toast.error("Thêm sách thất bại")
+        console.log(err)
+      })
+
+  } 
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
       <Grid item xs={12}>
@@ -52,6 +94,8 @@ export default function BookAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={name}
+              onChange={handleChangeName}
               style={{ width: "400px", marginLeft: "-50px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -66,6 +110,8 @@ export default function BookAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={category}
+              onChange={handleChangeCategory}
               style={{ width: "400px", marginLeft: "-50px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -80,6 +126,8 @@ export default function BookAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={author}
+              onChange={handleChangeAuthor}
               style={{ width: "400px", marginLeft: "-50px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -95,6 +143,8 @@ export default function BookAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={publish_company}
+              onChange={handleChangeCompany}
               style={{ width: "400px", marginLeft: "-50px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -105,13 +155,16 @@ export default function BookAddPage() {
           <Grid item container alignItems="center" sx={{ mt: 1 }}>
             <Grid item xs={2}>
               <Typography style={{ fontSize: "24px" }}>
-                Ngày xuất bản
+                Năm xuất bản
               </Typography>
             </Grid>
-            <Grid item xs={10} style={{ marginLeft: "-50px" }}>
-              <CustomizedDatePicker
-                format="DD-MM-YYYY"
-              ></CustomizedDatePicker>
+            <Grid item xs={10}>
+              <TextField
+                value={publish_year}
+                onChange={handleChangeYear}
+                style={{ width: "400px", marginLeft: "-50px" }}
+                inputProps={{ style: { fontSize: "20px" } }}
+              ></TextField>
             </Grid>
           </Grid>
         </LocalizationProvider>
@@ -124,22 +177,9 @@ export default function BookAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={price}
+              onChange={handleChangePrice}
               type="price"
-              style={{ width: "400px", marginLeft: "-50px" }}
-              inputProps={{ style: { fontSize: "20px" } }}
-            ></TextField>
-          </Grid>
-        </Grid>
-
-        <Grid item container alignItems="center" sx={{ mt: 1 }}>
-          <Grid xs={2}>
-            <Typography style={{ fontSize: "24px" }}>
-              Số lượng
-            </Typography>
-          </Grid>
-          <Grid item xs={10}>
-            <TextField
-              type="number"
               style={{ width: "400px", marginLeft: "-50px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -159,7 +199,8 @@ export default function BookAddPage() {
             fontWeight: "500",
           }}
           type="submit"
-        >
+          onClick={handleSubmit}
+        > 
           Xác nhận
         </Button>
 

@@ -29,8 +29,20 @@ async def get_bill_by_id(
   user = Depends(get_current_user)
 ):
   try:
-    bill = supabase.table('bill').select('*').eq('id', id).execute().data
-    return bill
+    bill = supabase.table('bill').select('*').eq('id', id).execute().data[0]
+    payments = bill['payment']
+    payments_info = []
+    for payment in payments:
+      book = supabase.table('book').select('name', 'price').eq("id", payment['book_id']).execute().data[0]
+      payments_info.append({
+        "id": payment['book_id'],
+        'name': book['name'],
+        'quantity': payment['quantity'],
+        'price': book['price']
+      })
+
+    print(payments_info)
+    return bill, payments_info
   except:
     return BAD_REQUEST
 
@@ -39,7 +51,6 @@ async def get_bill_by_element(
   supabase: Annotated[Client, Depends(get_supabase)],
   start_time: datetime | None = None,
   end_time: datetime | None = None,
-  bill_id: int | None = None,
   user = Depends(get_current_user)
 ):
   try:
@@ -47,12 +58,10 @@ async def get_bill_by_element(
       end_time = datetime.max
     if start_time == None:
       start_time = datetime.min
-    if bill_id == None:
-      bills = supabase.table('bill').select(
-        'id', 'customer_name', 'time_created', 'amount').gte(
-          'time_created', start_time).lte('time_created', end_time).execute().data
-    else :
-      bills = supabase.table('bill').select('*').eq('id', bill_id).execute().data
+    bills = supabase.table('bill').select(
+      'id', 'customer_name', 'time_created', 'amount', 'cashier_name').gte(
+        'time_created', start_time).lte('time_created', end_time).execute().data
+ 
     return bills
   except:
     return BAD_REQUEST
@@ -68,9 +77,9 @@ async def create_bill(
       data = {
         "customer_name": bill_info.customer_name,
         "customer_phone_number": bill_info.customer_phone_number,
-        "customer_address": bill_info.customer_address,
         "cashier_name": bill_info.cashier_name,
-        "time_created": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        # "time_created": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "time_created": bill_info.time_created,
         "amount": bill_info.amount,
         "description": bill_info.description,
         "payment": json.loads(json.dumps(bill_payments, default=lambda o: o.__dict__))
@@ -91,4 +100,8 @@ async def edit_bill(
   bill_payment: BillPayment,
   user = Depends(get_current_user)
 ):
-  pass
+  try:
+    supabase.table('bill').update(jsonable_encoder(bill_info)).eq("id", bill_id).execute()
+    return {"detail": "success"}
+  except:
+    raise BAD_REQUEST

@@ -3,21 +3,14 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Security, Request, Form
 from fastapi.encoders import jsonable_encoder
 from supabase import Client
-from models.staff import StaffInfo, StaffRegister, StaffLogin, Password 
+from models.staff import  StaffLogin, Password 
 from utils.exceptions import BAD_REQUEST, FORBIDDEN, NOT_FOUND
 from typing import Annotated, List
 from database.db_service import get_supabase
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from models.token import Token, TokenData
 from passlib.context import CryptContext
-from models.mail import MailBody
 from utils.auth import verify_password, get_password_hash, create_access_token, get_current_user
-from ssl import create_default_context
-from email.mime.text import MIMEText
-from smtplib import SMTP
-from starlette.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
- 
 import smtplib
 from email.message import EmailMessage
 
@@ -65,17 +58,25 @@ async def login(
     user = supabase.table('staff').select('*').eq('staff_code', login.staff_code).execute().data
     if len(user) == 0:
       return {"detail": "failed",
-              "description": 'User name doesn\'t exist'}
+              "description": 'Tài khoản không tồn tại'}
     
     if verify_password(login.password, user[0]['password']) == True: 
       token_data = TokenData(id=user[0]['id'], staff_code=user[0]['staff_code'], 
-                             role= user[0]['role'], name= user[0]['name'])
+                             role=user[0]['role'], name=user[0]['name'])
       access_token = create_access_token(token_data.dict())
-      return Token(access_token=access_token, token_type='bearer')
+      return {
+          'token': Token(access_token=access_token, token_type='bearer'),
+          'detail': 'success',
+          'id': user[0]['id'],
+          'role': user[0]['role'],
+          'staff_code': user[0]['staff_code'],
+          'name': user[0]['name']
+
+      }
         
     else:
       return {"detail": "failed",
-              "description": 'invalid password'}
+              "description": 'Sai mật khẩu'}
     
   except:
     return BAD_REQUEST

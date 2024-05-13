@@ -8,9 +8,9 @@ class BillPayment(BaseModel):
 class BillInfo(BaseModel):
     customer_name: str | None = None
     customer_phone_number: str | None = None
-    customer_address: str | None = None 
     cashier_name: str 
     description: str | None = None
+    time_created: str
     amount: int
 
 class Bill(BillInfo):

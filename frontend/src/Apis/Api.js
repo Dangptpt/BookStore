@@ -36,23 +36,23 @@ class ClassApi {
   }
 
   editBook(id, data) {
-    return axios.patch(API_BASE_URL + `/book/${id}`), data, {
+    return axios.patch(API_BASE_URL + `/book/?book_id=${id}`, data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       }
-    }
+    });
   }
 
   postNewBook(data) {
-    return axios.post(API_BASE_URL, '/book', data, {
+    return axios.post(API_BASE_URL + '/book', data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       }
-    })
+    });
   }
 
   editQuantity(data) {
@@ -62,7 +62,7 @@ class ClassApi {
         "content-type": "application/json; charset=utf-8 ",
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       }
-    })
+    });
   }
 
   /**** Bill ****/
@@ -86,8 +86,8 @@ class ClassApi {
     })
   }
   
-  getBillByElement(start_time, end_time, bill_id) {
-    return axios.get(API_BASE_URL + `/bill?start_time=${start_time}&end_time=${end_time}&bill_id=${bill_id}`, {
+  getBillByElement(start_time, end_time) {
+    return axios.get(API_BASE_URL + `/bill?start_time=${start_time}&end_time=${end_time}`, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -97,7 +97,7 @@ class ClassApi {
   }
 
   postNewBill(data) {
-    return axios.post(API_BASE_URL, '/bill', data, {
+    return axios.post(API_BASE_URL + '/bill', data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -209,14 +209,11 @@ class ClassApi {
   }
 
   /**** Auth ****/
-  postLogin(data) {
-    return axios.post(API_BASE_URL, '/auth/login', data, {
-      headers: {
-        "access-control-allow-origin": "*",
-        "content-type": "application/json; charset=utf-8 ",
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      }
-    })
+  postLogin(account, password) {
+    return axios.post(API_BASE_URL + "/auth/login", {
+      staff_code: account,
+      password: password,
+    });
   }
 
   changePassword(data, id) {

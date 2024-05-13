@@ -6,11 +6,13 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { styled } from "@mui/system";
 import { Table, TableBody, TableCell, createTheme, ThemeProvider } from "@mui/material";
 import { TableRow, TableHead, TableContainer } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useState } from "react";
+import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { Autocomplete } from "@mui/material";
 import AutoComplete from "../../component/AutoCompleteSearch";
+import ClassAPi from '../../Apis/Api'
 
 const CustomizedDateTimePicker = styled(DateTimePicker)`
   & .MuiInputBase-input {
@@ -47,7 +49,33 @@ export default function BillEditPage() {
     { name: "" }
   ];
   const [payments, setPayments] = useState([]);
-
+  const [date, setDate] = useState(null)
+  const [amount, setAmount] = useState(0)
+  const [customer_name, setCustomer_Name] = useState("")
+  const [customer_phone_number, setCustomer_phone_number] = useState("")
+  const [description, setDescription] = useState("")
+  const [cashier_name, setCashier_name] = useState("")
+  const param = useParams()
+  useEffect(() => {
+    ClassAPi.getBillById(param.id)
+      .then((respone) => {
+        const data = respone.data;
+        const bill = data[0];
+        const payment = data[1];
+        console.log(bill, payment)
+        setCustomer_Name(bill.customer_name)
+        setDate(bill.time_created)
+        setCustomer_phone_number(bill.customer_phone_number)
+        setCashier_name(bill.cashier_name)
+        setDescription(bill.description)
+        setAmount(bill.amount)
+        setPayments(payment)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+    
+  }, []); 
   const handleAddPayment = () => {
     setPayments([...payments, { label: "", cost: "", residenceFeeId: "" }]);
   };
@@ -66,33 +94,9 @@ export default function BillEditPage() {
 
       <ThemeProvider theme={theme}>
 
-        <Grid item container alignItems="center" >
-          <Grid xs={2}>
-            <Typography style={{ fontSize: "24px" }}>
-              Mã hóa đơn
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              style={{ width: "400px", marginLeft: "-15px" }}
-              inputProps={{ style: { fontSize: "20px" } }}
-            ></TextField>
-          </Grid>
-          <Grid xs={2}>
-            <Typography style={{ fontSize: "24px" }}>
-              Tên khách hàng
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              style={{ width: "400px", marginLeft: "-55px" }}
-              inputProps={{ style: { fontSize: "20px" } }}
-            ></TextField>
-          </Grid>
-        </Grid>
+      <Grid item container alignItems="center" sx={{ mt: 1 }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Grid item container alignItems="center" sx={{ mt: 1 }}>
             <Grid item xs={2}>
               <Typography style={{ fontSize: "24px" }}>
                 Thời gian thanh toán
@@ -101,22 +105,25 @@ export default function BillEditPage() {
             <Grid item xs={4} style={{ marginLeft: "-15px" }}>
               <CustomizedDateTimePicker
                 format="DD-MM-YYYY hh-mm A"
+                value={dayjs(date)}
               ></CustomizedDateTimePicker>
             </Grid>
+          </LocalizationProvider>
 
-            <Grid xs={2}>
-              <Typography style={{ fontSize: "24px", marginLeft: "16px" }}>
-                Địa chỉ
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                style={{ width: "400px", marginLeft: "-40px" }}
-                inputProps={{ style: { fontSize: "20px" } }}
-              ></TextField>
-            </Grid>
+          <Grid xs={2}>
+            <Typography style={{ fontSize: "24px", marginLeft: "16px" }}>
+              Tên khách hàng
+            </Typography>
           </Grid>
-        </LocalizationProvider>
+          <Grid item xs={4}>
+            <TextField
+              value={customer_name}
+              onChange={(e) => setCustomer_Name(e.target.value)}
+              style={{ width: "400px", marginLeft: "-40px" }}
+              inputProps={{ style: { fontSize: "20px" } }}
+            ></TextField>
+          </Grid>
+        </Grid>
 
         <Grid item container alignItems="center" sx={{ mt: 1 }}>
           <Grid xs={2}>
@@ -126,7 +133,7 @@ export default function BillEditPage() {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              type="price"
+              value={cashier_name}
               style={{ width: "400px", marginLeft: "-15px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -139,6 +146,8 @@ export default function BillEditPage() {
           </Grid>
           <Grid item xs={4}>
             <TextField
+              value={customer_phone_number}
+              onChange={(e) => setCustomer_phone_number(e.target.value)}
               style={{ width: "400px", marginLeft: "-55px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -176,6 +185,7 @@ export default function BillEditPage() {
 
                       <TableCell >
                         <TextField
+                          value={payment.name}
                           inputProps={{
                             style: { fontSize: "20px", width: "280px" },
                             required: true,
@@ -185,6 +195,7 @@ export default function BillEditPage() {
 
                       <TableCell >
                         <TextField
+                          value={payment.quantity}
                           inputProps={{
                             style: { fontSize: "20px", width: "100px" },
                             required: true,
@@ -196,6 +207,7 @@ export default function BillEditPage() {
 
                       <TableCell >
                         <TextField
+                          value={payment.quantity*payment.price}
                           inputProps={{
                             style: { fontSize: "20px", width: "180px" },
                             readOnly: true,
@@ -223,6 +235,7 @@ export default function BillEditPage() {
                   </TableCell>
                   <TableCell colSpan={4} style={{ fontSize: "20px" }}>
                     <TextField
+                      value={amount}
                       inputProps={{
                         style: { fontSize: "18px" },
                         readOnly: true,
@@ -256,6 +269,8 @@ export default function BillEditPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               style={{ width: "510px", marginLeft: "-120px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>

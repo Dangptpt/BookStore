@@ -26,9 +26,9 @@ async def get_book_by_id(
   user = Depends(get_current_user)
 ):
   res = supabase.table("book").select('*').eq("id", id).execute().data
-  return res
+  return res[0]
  
-@router.get("/", description='get book by name, author and category')
+@router.get("", description='get book by name, author and category')
 async def get_book_by_elements(
   supabase: Annotated[Client, Depends(get_supabase)],
   name: str | None = None,
@@ -36,18 +36,19 @@ async def get_book_by_elements(
   category: str | None = None,
   user = Depends(get_current_user)
 ):
-  if name == None:
+  if name == None or name == '':
     name = '\0'
   else :
     name = '\\' + name
-  if author == None:
+  if author == None or author == '':
     author = '\0'
   else:
     author = '\\' + author
-  if category == None:
+  if category == None or category == '':
     category = '\0'
   else:
     category = '\\' + category
+  print (name, category, author)
   try:
     res = supabase.table('book').select('*').ilike(
       'name', '%{}%'.format(name)).ilike(
@@ -70,7 +71,7 @@ async def postBook(
     raise BAD_REQUEST
   
 @router.patch("", description='edit a book')
-async def eidt_book(
+async def edit_book(
   supabase: Annotated[Client, Depends(get_supabase)],
   book_info: BookInfo,
   book_id: int,
@@ -82,8 +83,8 @@ async def eidt_book(
   except:
     raise BAD_REQUEST
 
-@router.patch("quantity")
-async def eidt_quantity_book(
+@router.patch("/quantity")
+async def edit_quantity_book(
   supabase: Annotated[Client, Depends(get_supabase)],
   books: List[Book],
   user = Depends(get_current_user)

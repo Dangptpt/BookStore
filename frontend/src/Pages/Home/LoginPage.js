@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -17,14 +17,31 @@ import { useNavigate } from "react-router-dom";
 import ClassApi, { API_BASE_URL } from "../../Apis/Api";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify'
-
+const style = {
+  position: 'absolute',
+  top: '30%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
-  
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const changeAccount = (e) => {
     setAccount(e.target.value)
   }
@@ -53,8 +70,18 @@ export default function LoginPage() {
       toast.error("Lỗi đăng nhập")
       console.error('Error fetching data:', error);
     });
-
   };
+
+  const handelResetPasswors = () => {
+    ClassApi.resetPassword()
+      .then((response) => {console.log(response);
+        toast.success("Gửi mật khẩu thành công!")
+      })
+      .catch((err) => {console.log(err)
+        toast.error("Gửi mật khẩu thất bại!")
+      })
+    
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -72,7 +99,7 @@ export default function LoginPage() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h4">
-            Sign in
+            Đăng nhập
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
@@ -103,10 +130,7 @@ export default function LoginPage() {
               inputProps={{style : {fontSize: "20px"}}}
               InputLabelProps={{ style: { fontSize: "18px" } }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            
             <Button
               fullWidth
               variant="contained"
@@ -114,20 +138,32 @@ export default function LoginPage() {
               style={{fontSize: "18px"}}
               onClick={handleLogin}
             >
-              Sign In
+              Đăng nhập
             </Button>
-            <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link href="#" variant="body2" onClick={handleOpen}>
+                  Quên mật khẩu
                 </Link>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+              <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+          <h2 id="parent-modal-title">Mật khẩu mới sẽ được gửi đến email của bạn</h2>
+          <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              style={{fontSize: "18px"}}
+              onClick={handelResetPasswors}
+            >
+              Xác nhận
+            </Button>
+        </Box>
+      </Modal>
           </Box>
         </Box>
       </Container>

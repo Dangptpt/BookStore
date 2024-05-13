@@ -42,6 +42,16 @@ export default function BookPage() {
         console.log(err.message)
       })
   }
+  useEffect(() => {
+    ClassAPi.getAllBook()
+      .then((respone) => {
+        setBooks(respone.data);
+        console.log(books)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []); 
   const check = sessionStorage.getItem("role");
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
