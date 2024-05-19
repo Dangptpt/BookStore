@@ -2,7 +2,7 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-
+import CircularProgress from '@mui/material/CircularProgress';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -36,6 +36,7 @@ export default function LoginPage() {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const [open, setOpen] = useState(false);
+  const [wait, setWait] = useState(false)
   const handleOpen = () => {
     setOpen(true);
   };
@@ -52,12 +53,13 @@ export default function LoginPage() {
   const handleLogin = () => {
     console.log(account, password)
     ClassApi.postLogin(account, password).then((response) => {
-      console.log (response.data)
+      console.log(response.data)
       if (response.data.detail === "success") {
         sessionStorage.setItem('staff_code', response.data.staff_code);
         sessionStorage.setItem('role', response.data.role);
         sessionStorage.setItem('name', response.data.name);
         sessionStorage.setItem('token', response.data.token.access_token);
+        sessionStorage.setItem('id', response.data.id);
 
         setTimeout(() => {
           navigate("/home")
@@ -72,15 +74,20 @@ export default function LoginPage() {
     });
   };
 
-  const handelResetPasswors = () => {
-    ClassApi.resetPassword()
-      .then((response) => {console.log(response);
+  const handelResetPassword = () => {
+    setWait(true)
+    ClassApi.resetPassword(account)
+      .then((response) => {
+        console.log(response);
         toast.success("Gửi mật khẩu thành công!")
+        setWait(false)
       })
-      .catch((err) => {console.log(err)
+      .catch((err) => {
+        console.log(err)
         toast.error("Gửi mật khẩu thất bại!")
+        setWait(false)
       })
-    
+
   }
 
   return (
@@ -111,9 +118,9 @@ export default function LoginPage() {
               name="email"
               autoComplete="email"
               autoFocus
-              value = {account}
+              value={account}
               onChange={e => changeAccount(e)}
-              inputProps={{style : {fontSize: "20px"}}}
+              inputProps={{ style: { fontSize: "20px" } }}
               InputLabelProps={{ style: { fontSize: "18px" } }}
             />
             <TextField
@@ -127,43 +134,48 @@ export default function LoginPage() {
               value={password}
               onChange={e => changePassword(e)}
               autoComplete="current-password"
-              inputProps={{style : {fontSize: "20px"}}}
+              inputProps={{ style: { fontSize: "20px" } }}
               InputLabelProps={{ style: { fontSize: "18px" } }}
             />
-            
+
             <Button
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{fontSize: "18px"}}
+              style={{ fontSize: "18px" }}
               onClick={handleLogin}
             >
               Đăng nhập
             </Button>
-              <Grid item xs>
-                <Link href="#" variant="body2" onClick={handleOpen}>
-                  Quên mật khẩu
-                </Link>
-              </Grid>
-              <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box sx={{ ...style, width: 400 }}>
-          <h2 id="parent-modal-title">Mật khẩu mới sẽ được gửi đến email của bạn</h2>
-          <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              style={{fontSize: "18px"}}
-              onClick={handelResetPasswors}
+            <Grid item xs>
+              <Link href="#" variant="body2" onClick={handleOpen}>
+                Quên mật khẩu
+              </Link>
+            </Grid>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="parent-modal-title"
+              aria-describedby="parent-modal-description"
             >
-              Xác nhận
-            </Button>
-        </Box>
-      </Modal>
+              <Box sx={{ ...style, width: 400 }}>
+                <h2 id="parent-modal-title">Mật khẩu mới sẽ được gửi đến email của bạn</h2>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  style={{ fontSize: "18px" }}
+                  onClick={handelResetPassword}
+                >
+                  Xác nhận
+                </Button>
+                { wait &&
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <CircularProgress color="primary" />
+                </div>
+}
+              </Box>
+            </Modal>
           </Box>
         </Box>
       </Container>

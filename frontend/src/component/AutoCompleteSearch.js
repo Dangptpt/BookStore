@@ -1,7 +1,7 @@
 import React from "react";
 import { Autocomplete, Box, TextField } from "@mui/material";
 
-export default function AutoComplete({ optionList, onChange, width }) {
+export default function AutoComplete({ optionList, onChange, width, show }) {
   return (
     <Autocomplete
       disablePortal
@@ -17,7 +17,7 @@ export default function AutoComplete({ optionList, onChange, width }) {
       }}
       renderOption={(props, option) => (
         <Box component="li" {...props}>
-          {option.name} (số lượng: {option.quantity})
+          {option.name} {show && '(số lượng:' + option.quantity +')' } 
         </Box>
       )}
       renderInput={(params) => <TextField {...params}  required={true} />}

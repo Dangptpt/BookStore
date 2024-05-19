@@ -6,11 +6,13 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { styled } from "@mui/system";
 import { Table, TableBody, TableCell, createTheme,ThemeProvider } from "@mui/material";
 import { TableRow, TableHead, TableContainer } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Autocomplete } from "@mui/material";
 import AutoComplete from "../../component/AutoCompleteSearch";
+import ClassAPi from '../../Apis/Api'
+import dayjs from "dayjs";
 
 const CustomizedDatePicker = styled(DatePicker)`
   & .MuiInputBase-input {
@@ -42,11 +44,20 @@ export default function ImportEditPage() {
   const tableHead = [
     { name: "Số thứ tự" },
     { name: "Tên sách" },
+    { name: "Đơn giá" },
     { name: "Số lượng" },
     { name: "Thành tiền" },
-    { name: "" } 
+    { name: "" }
   ];
   const [payments, setPayments] = useState([]);
+  const [books, setBooks] = useState([])
+  const [date, setDate] = useState(new Date())
+  const [amount, setAmount] = useState(0)
+  const [code, setCode] = useState("")
+  const [supplier, setSupplier] = useState("")
+  const [description, setDescription] = useState("")
+  const [delivery, setDelivery] = useState("")
+  const [staff_name, setStaff_name] = useState("")
 
   const handleAddPayment = () => {
     setPayments([...payments, { label: "", cost: "", residenceFeeId: "" }]);
@@ -55,6 +66,26 @@ export default function ImportEditPage() {
     const updatePayments = payments.filter((_, index) => index !== id);
     setPayments(updatePayments);
   };
+  const param = useParams()
+  useEffect(() => {
+    ClassAPi.getImportBillById(param.id)
+      .then((respone) => {
+        const data = respone.data[0]
+        const ls = respone.data[1]
+        setAmount(data.cost)
+        setStaff_name(data.staff_name)
+        setDelivery(data.delivery_name)
+        setSupplier(data.supplier)
+        setCode(data.code)
+        setPayments(data.import_list)
+        setDescription(data.description)
+        setDate(data.date_created)
+        setPayments(ls)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []);
 
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
@@ -74,6 +105,7 @@ export default function ImportEditPage() {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                value={code}
                 style={{ width: "400px", marginLeft: "-15px" }}
                 inputProps={{ style: { fontSize: "20px" } }}
               ></TextField>
@@ -85,6 +117,7 @@ export default function ImportEditPage() {
             </Grid>
             <Grid item xs={2}>
               <TextField
+                value={supplier}
                 style={{ width: "400px", marginLeft: "-55px" }}
                 inputProps={{ style: { fontSize: "20px" } }}
               ></TextField>
@@ -100,6 +133,7 @@ export default function ImportEditPage() {
               </Grid>
               <Grid item xs={4} style={{ marginLeft: "-15px" }}>
                 <CustomizedDatePicker
+                  value={dayjs(date)}
                   style = {{ width: "400px"}}
                   format="DD-MM-YYYY"
                 ></CustomizedDatePicker>
@@ -112,6 +146,7 @@ export default function ImportEditPage() {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                value={delivery}
                 style={{ width: "400px", marginLeft: "-40px" }}
                 inputProps={{ style: { fontSize: "20px" } }}
               ></TextField>
@@ -127,6 +162,7 @@ export default function ImportEditPage() {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                value={staff_name}
                 type="price"
                 style={{ width: "400px", marginLeft: "-15px" }}
                 inputProps={{ style: { fontSize: "20px" } }}
@@ -139,102 +175,93 @@ export default function ImportEditPage() {
       </Grid>
 
       <Grid item>
-        <TableContainer component={Paper}>
-          <Table style={{ width: 1100, border: "solid",  borderWidth: '1px' }} >
-            <TableHead >
-              <TableRow style={{backgroundColor: "#C0C0C0"}}>
-                {tableHead.map((col, index) => (
-                  <TableCell key={index} >
-                    <Typography
-                      style={{ fontWeight: "600", fontSize: "22px" }}>
-                      {col.name}
-                    </Typography>
+          <TableContainer component={Paper}>
+            <Table style={{ width: 1300, border: "solid", borderWidth: '1px' }} >
+              <TableHead >
+                <TableRow style={{ backgroundColor: "#C0C0C0" }}>
+                  {tableHead.map((col, index) => (
+                    <TableCell key={index} >
+                      <Typography
+                        style={{ fontWeight: "600", fontSize: "22px" }}>
+                        {col.name}
+                      </Typography>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+
+              <TableBody >
+                {payments &&
+                  payments.map((payment, index) => (
+                    <TableRow >
+                      <TableCell style={{ fontSize: "20px" }}>
+                        {index + 1}
+                      </TableCell>
+
+                      <TableCell >
+                      <TextField
+                          inputProps={{
+                            style: { fontSize: "20px", width: "300px" },
+                            required: true,
+                          }}
+                          value={payment.name}
+                        ></TextField>
+                      </TableCell>
+
+                      <TableCell >
+                        <TextField
+                          inputProps={{
+                            style: { fontSize: "20px", width: "180px" },
+                            required: true,
+                          }}
+                          value={payment.price}
+                        ></TextField>
+                      </TableCell>
+
+                      <TableCell >
+                        <TextField
+                          inputProps={{
+                            style: { fontSize: "20px", width: "80px" },
+                            required: true,
+                            type: "number",
+                            min: 1
+                          }}
+                          value={payment.quantity}
+                        ></TextField>
+                      </TableCell>
+
+                      <TableCell >
+                        <TextField
+                          value={payment.price * payment.quantity}
+                          inputProps={{
+                            style: { fontSize: "20px", width: "180px" },
+                            readOnly: true,
+                          }}>
+                        </TextField>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                <TableRow>
+                  <TableCell
+                    colSpan={1}
+                    style={{ color: "red", fontSize: "24px" }}
+                  >
+                    Tổng số tiền
                   </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody >
-              {payments &&
-                payments.map((payment, index) => (
-                  <TableRow >
-                    <TableCell style = {{ fontSize: "20px"}}>
-                      {index + 1}
-                    </TableCell>
-
-                    <TableCell >
-                      <TextField
-                        inputProps={{
-                          style: { fontSize: "20px", width: "280px" },
-                          required: true,
-                        }}
-                      ></TextField>
-                    </TableCell>
-
-                    <TableCell >
-                      <TextField
-                        inputProps={{
-                          style: { fontSize: "20px", width: "100px" },
-                          required: true,
-                          type: "number",
-                          min: 1 
-                        }}
-                      ></TextField>
-                    </TableCell>
-
-                    <TableCell >
-                      <TextField
-                        inputProps={{
-                          style: { fontSize: "20px", width: "180px" },
-                          readOnly: true,
-                        }}>
-                      </TextField>
-                    </TableCell>
-
-                    <TableCell >
-                      <Button
-                        onClick={() => handleDeletePayment(index)}
-                        style={{ fontSize: "18px", color: "red" }}
-                        type="button"
-                      >
-                        Xóa
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              <TableRow>
-                <TableCell
-                  colSpan={1}
-                  style={{ color: "red", fontSize: "24px" }}
-                >
-                  Tổng số tiền
-                </TableCell>
-                <TableCell colSpan={4} style={{ fontSize: "20px" }}>
-                  <TextField
-                    inputProps={{
-                      style: { fontSize: "18px" },
-                      readOnly: true,
-                    }}>
-                  </TextField>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-
-      <Grid item xs={12} sx={{ mt: 1 }}>
-        <Typography>
-          <Button
-            onClick={() => handleAddPayment()}
-            style={{ fontSize: "18px", color: "red" }}
-            type="button"
-          >
-            Thêm
-          </Button>
-        </Typography>
-      </Grid>
-
+                  <TableCell colSpan={4} style={{ fontSize: "20px" }}>
+                    <TextField
+                      value={amount}
+                      inputProps={{
+                        style: { fontSize: "18px" },
+                        readOnly: true,
+                      }}>
+                    </TextField>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
 
       <Grid item container alignItems="center" sx={{ mt: 3 }}>
             <Grid xs={2}>
@@ -244,6 +271,7 @@ export default function ImportEditPage() {
             </Grid>
             <Grid item xs={10}>
               <TextField
+                value={description}
                 style={{ width: "510px", marginLeft: "-120px" }}
                 inputProps={{ style: { fontSize: "20px" } }}
               ></TextField>

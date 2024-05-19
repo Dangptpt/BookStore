@@ -104,17 +104,14 @@ async def change_password(
 @router.post('/reset')
 async def reset_password(
   supabase: Annotated[Client, Depends(get_supabase)],
-  staff_id: int,
-  user = Depends(get_current_user),
+  staff_code: str,
 ):
   try:
-    if (user['role'] != 'admin'):
-      return FORBIDDEN
-    data = supabase.table('staff').select('email').eq('id', staff_id).execute().data
+    data = supabase.table('staff').select('email').eq('staff_code', staff_code).execute().data
     if len(data) == 0:
       return {"detail": "failed",
               "description": 'invalid id'}
-    
+    print(data)
     reset_password = generate_password(12)  
     to_email = data[0]['email']
     subject = 'RESET PASSWORD'
@@ -124,8 +121,13 @@ async def reset_password(
     msg = EmailMessage()
     msg['Subject'] = subject
     msg['From'] = from_email
-    msg['To'] = 'toidoidoi'
+    msg['To'] = to_email
     msg.set_content(f'Mật khẩu mới của bạn: {reset_password} ')
+    
+    try:
+      supabase.table('staff').update({'password': get_password_hash(reset_password)}).eq('staff_code', staff_code).execute()
+    except:
+       return BAD_REQUEST
 
     # send email
     try:

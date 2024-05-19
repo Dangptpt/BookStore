@@ -38,7 +38,7 @@ async def get_bill_by_id(
         "id": payment['book_id'],
         'name': book['name'],
         'quantity': payment['quantity'],
-        'price': book['price']
+        'price': payment['price']
       })
 
     print(payments_info)

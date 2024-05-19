@@ -4,6 +4,7 @@ from datetime import datetime
 class ImportList(BaseModel):
     book_id: int
     quantity: int
+    unit_price: int 
 
 class ImportInfo(BaseModel):
     code: str

@@ -56,7 +56,7 @@ class ClassApi {
   }
 
   editQuantity(data) {
-    return axios.patch(API_BASE_URL, '/quantity', data, {
+    return axios.patch(API_BASE_URL + '/book/quantity', data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -148,7 +148,7 @@ class ClassApi {
   }
 
   postNewImportBill(data) {
-    return axios.post(API_BASE_URL, '/import', data, {
+    return axios.post(API_BASE_URL + '/import', data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -189,7 +189,7 @@ class ClassApi {
   }
   
   postNewStaff(data) {
-    return axios.post(API_BASE_URL, '/staff', data, {
+    return axios.post(API_BASE_URL + '/staff', data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -199,7 +199,7 @@ class ClassApi {
   }
   
   editStaff(id, data) {
-    return axios.patch(API_BASE_URL, `/staff/${id}`, data, {
+    return axios.patch(API_BASE_URL + `/staff/info?staff_id=${id}`, data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -217,7 +217,7 @@ class ClassApi {
   }
 
   changePassword(data, id) {
-    return axios.patch(API_BASE_URL, `/auth/password/${id}`, data, {
+    return axios.patch(API_BASE_URL + `/auth/password?staff_id=${id}`, data, {
       headers: {
         "access-control-allow-origin": "*",
         "content-type": "application/json; charset=utf-8 ",
@@ -226,14 +226,8 @@ class ClassApi {
     })
   }
   
-  resetPassword(id) {
-    return axios.post(API_BASE_URL, `/auth/reset/${id}`, {
-      headers: {
-        "access-control-allow-origin": "*",
-        "content-type": "application/json; charset=utf-8 ",
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      }
-    })
+  resetPassword(staff_code) {
+    return axios.post(API_BASE_URL + `/auth/reset?staff_code=${staff_code}`)
   }
 }
 

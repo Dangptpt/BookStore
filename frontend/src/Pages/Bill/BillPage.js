@@ -106,7 +106,7 @@ export default function BillPage() {
             onChange={(datetime) => setStartTime(datetime)}
           />
           <CustomizedDateTimePicker
-            value = {endTime}
+            
             label="Thời gian kết thúc"
             slotProps={{ textField: { variant: "filled" } }}
             format="DD-MM-YYYY hh-mm A"

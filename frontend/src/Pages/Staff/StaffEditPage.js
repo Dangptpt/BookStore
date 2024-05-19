@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
-import ClassApi from "../../Apis/Api";
 import { Button, Divider, FormControlLabel, Grid, Radio, RadioGroup, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { NavLink } from "react-router-dom";
-import axios from "axios";
+import { NavLink, useParams } from "react-router-dom";
+import ClassAPi from '../../Apis/Api'
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
@@ -38,12 +37,31 @@ const CustomizedDatePicker = styled(DatePicker)`
 `;
 
 export default function StaffEditPage() {
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [cccd, setCccd] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(null);
+  const [gender, setGender] = useState(true);
+  const param = useParams()
+  useEffect(() => {
+    ClassAPi.getStaffById(param.id)
+      .then((respone) => {
+        const data=respone.data
+        console.log(data)
+        setAddress(data.address)
+        setName(data.name)
+        setDate(data.birth_date)
+        setEmail(data.email)
+        setPhoneNumber(data.phone_number)
+        setGender(data.gender)
+        setCccd(data.identity_card)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []);
 
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
@@ -62,6 +80,7 @@ export default function StaffEditPage() {
           </Grid>
           <Grid item xs={4}>
             <TextField
+              value={name}
               style={{ width: "400px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -79,6 +98,7 @@ export default function StaffEditPage() {
             <RadioGroup
               name="radio-buttons-group"
               style={{ display: "inline" }}
+              value={gender == true ? 'Nam' : "Nữ"}
             >
               <FormControlLabel
                 value="Nam"
@@ -108,7 +128,7 @@ export default function StaffEditPage() {
             <Grid item xs={10}>
               <CustomizedDatePicker
                 style={{ height: "30px" }}
-                value={date}
+                value={dayjs(date)}
                 //onChange={handleDateChange}
                 onChange={(date) => setDate(date)}
                 format="DD-MM-YYYY"
@@ -159,6 +179,7 @@ export default function StaffEditPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={email}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
           </Grid>
@@ -180,34 +201,6 @@ export default function StaffEditPage() {
             ></TextField>
           </Grid>
         </Grid>
-        <Grid item container alignItems="center" sx={{ mt: 3 }}>
-          <Grid xs={2}>
-            <Typography style={{ fontSize: "24px" }}>
-              Tài khoản nhân viên
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              style={{ width: "400px" }}
-              inputProps={{ style: { fontSize: "20px" } }}
-            ></TextField>
-          </Grid>
-        </Grid>
-      
-        <Grid item container alignItems="center">
-          <Grid xs={2}>
-            <Typography style={{ fontSize: "24px" }}>
-              Mật khẩu
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              style={{ width: "400px" }}
-              inputProps={{ style: { fontSize: "20px" } }}
-            ></TextField>
-          </Grid>
-        </Grid>
-      
 
       </ThemeProvider>
       <Grid item sx={{ mt: 2 }}>

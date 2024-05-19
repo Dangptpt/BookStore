@@ -21,7 +21,7 @@ async def get_all_staffs(
   try:
     if user['role'] != 'admin':
       return FORBIDDEN
-    return supabase.table('staff').select('staff_code', 'name', 'id').execute().data
+    return supabase.table('staff').select('staff_code', 'name', 'id').neq("role", "admin").execute().data
   except:
     return BAD_REQUEST
 
@@ -29,13 +29,12 @@ async def get_all_staffs(
 @router.get('/{id}')
 async def get_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
-  staff_id: int,
+  id: int,
   user = Depends(get_current_user),
 ):
   try:
-    if user['role'] != 'admin':
-      return FORBIDDEN
-    res = supabase.table('staff').select('*').eq('id', staff_id).execute().data
+   
+    res = supabase.table('staff').select('*').eq('id', id).execute().data[0]
     return res
   except:
     return BAD_REQUEST
@@ -49,6 +48,12 @@ async def create_new_staff(
   try:
     if user['role'] != 'admin':
         return FORBIDDEN
+    staff_codes = supabase.table('staff').select("staff_code").execute().data
+    print((staff_codes))
+    for staff_code in staff_codes:
+      if staff_code['staff_code'] == staff_register.staff_code :
+        return {"detail": "fail",
+                "description": "Tài khoản nhân viên đã tồn tại!"} 
     staff_register.password = get_password_hash(staff_register.password)
     data = jsonable_encoder(staff_register)
     print(data)
@@ -66,7 +71,7 @@ async def edit_infomation(
   user = Depends(get_current_user),
 ):
   try:
-    if user['role'] != 'user':
+    if user['id'] != staff_id:
       return FORBIDDEN
     supabase.table('staff').update(jsonable_encoder(staff_info)).eq('id', staff_id).execute().data
     return {"detail": "success"}

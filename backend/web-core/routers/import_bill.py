@@ -18,7 +18,7 @@ async def get_all_import(
   user = Depends(get_current_user)
 ):
   try:
-    res = supabase.table('import_bill').select('code', 'staff_name', 'id', 'date_created').execute().data
+    res = supabase.table('import_bill').select('code', 'staff_name', 'id', 'date_created', 'cost').execute().data
     return res
   except: 
     return BAD_REQUEST
@@ -26,12 +26,23 @@ async def get_all_import(
 @router.get("/{id}")
 async def get_by_id(
   supabase: Annotated[Client, Depends(get_supabase)],
-  import_id: int,
+  id: int,
   user = Depends(get_current_user)
 ):
   try:
-    res = supabase.table('import_bill').select('*').eq('id', import_id).execute().data
-    return res
+    res = supabase.table('import_bill').select('*').eq('id', id).execute().data[0]
+    payments = res['import_list']
+    import_info = []
+    for payment in payments:
+      book = supabase.table('book').select('name').eq("id", payment['book_id']).execute().data[0]
+      import_info.append({
+        "id": payment['book_id'],
+        'name': book['name'],
+        'quantity': payment['quantity'],
+        'price': payment['unit_price']
+      })
+      print(import_info)
+    return res, import_info
   except:
     return BAD_REQUEST
 

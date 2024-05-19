@@ -30,7 +30,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiInputBase-input": {
-            fontSize: "30px",
+            fontSize: "20px",
             padding: "8px",
           },
           padding: "0px",

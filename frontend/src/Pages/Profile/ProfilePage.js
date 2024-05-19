@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
-import ClassApi from "../../Apis/Api";
 import { Button, Divider, FormControlLabel, Grid, Radio, RadioGroup, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import ClassAPi from '../../Apis/Api'
 
 const theme = createTheme({
   components: {
@@ -17,7 +16,7 @@ const theme = createTheme({
         root: {
           width: "400px",
           "& .MuiInputBase-input": {
-            fontSize: "30px",
+            fontSize: "20px",
             padding: "8px",
           },
           padding: "0px",
@@ -37,14 +36,63 @@ const CustomizedDatePicker = styled(DatePicker)`
 }
 `;
 
-
 export default function ProfilePage() {
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [cccd, setCccd] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(null);
+  const [gender, setGender] = useState(true);
+  const id = sessionStorage.getItem('id')
+  useEffect(() => {
+    ClassAPi.getStaffById(id)
+      .then((respone) => {
+        const data=respone.data
+        console.log(data)
+        setAddress(data.address)
+        setName(data.name)
+        setDate(data.birth_date)
+        setEmail(data.email)
+        setPhoneNumber(data.phone_number)
+        // if (data.gender === true) setGender('Nam')
+        // else setGender('Nữ')
+        setGender(data.gender)
+        setCccd(data.identity_card)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []);
+  const handleSubmit = (e) => {
+    let birth_date
+    if (typeof date === 'string') birth_date = date;
+    else {
+      const offsetMinutes = 7 * 60 * 60000;
+      birth_date = new Date(date + offsetMinutes)
+      birth_date = birth_date.toISOString()
+    }
+    const data = {
+      staff_code: sessionStorage.getItem('staff_code'),
+      name: name,
+      address: address,
+      phone_number: phoneNumber,
+      gender: gender,
+      identity_card: cccd,
+      birth_date: birth_date,
+      role: sessionStorage.getItem('role'),
+      email: email
+    }
+    console.log(data)
+    ClassAPi.editStaff(id, data)
+      .then((respone) => {
+        toast.success('Cập nhật thông tin thành công')
+      })
+      .catch((err) => {
+        toast.error("Tạo hóa đơn thất bại")
+        console.log(err)
+      })
+    }
 
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
@@ -63,6 +111,8 @@ export default function ProfilePage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={name}
+              onChange={(e) => {setName(e.target.value)}}
               style={{ width: "400px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
@@ -80,6 +130,12 @@ export default function ProfilePage() {
             <RadioGroup
               name="radio-buttons-group"
               style={{ display: "inline" }}
+              value={gender == true ? 'Nam' : "Nữ"}
+              onChange={(e) => {
+                if(e.target.value == "Nam")
+                  setGender(true)
+                else setGender(false)
+              }}
             >
               <FormControlLabel
                 value="Nam"
@@ -109,8 +165,7 @@ export default function ProfilePage() {
             <Grid item xs={10}>
               <CustomizedDatePicker
                 style={{ height: "30px" }}
-                value={date}
-                //onChange={handleDateChange}
+                value={dayjs(date)}
                 onChange={(date) => setDate(date)}
                 format="DD-MM-YYYY"
               ></CustomizedDatePicker>
@@ -159,6 +214,8 @@ export default function ProfilePage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              value={email}
+              onChange={(e) => {setEmail(e.target.value)}}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>
           </Grid>
@@ -188,6 +245,7 @@ export default function ProfilePage() {
           <Button
             variant="contained"
             style={{ backgroundColor: "#79C9FF", margin: "30px 0px" }}
+            onClick={handleSubmit}
           >
             <Typography
               variant="h5"

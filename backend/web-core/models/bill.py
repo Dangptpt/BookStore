@@ -4,6 +4,7 @@ from datetime import datetime
 class BillPayment(BaseModel):
     book_id: int
     quantity: int
+    price: int
 
 class BillInfo(BaseModel):
     customer_name: str | None = None

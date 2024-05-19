@@ -6,14 +6,14 @@ class StaffBase(BaseModel):
     staff_code: str 
     
 class StaffInfo(StaffBase):
-    name: str
-    address: str
-    phone_number: str
-    gender: Gender
-    identity_card: str
-    birth_date: date
+    name: str | None = None
+    address: str | None = None
+    phone_number: str | None = None
+    gender: Gender | None = None
+    identity_card: str | None = None
+    birth_date: date | None = None
     role: Role = Role.user
-    email: str = Field(example="dangptpt@gmail.com")
+    email: str | None = None
 
 class StaffLogin(StaffBase):
     password: str

@@ -19,7 +19,7 @@ const theme = createTheme({
         root: {
           width: "400px",
           "& .MuiInputBase-input": {
-            fontSize: "30px",
+            fontSize: "20px",
             padding: "9px",
           },
           padding: "0px",
@@ -29,9 +29,8 @@ const theme = createTheme({
   },
 });
 
-
 export default function ChangePasswordPage() {
-
+  const id = sessionStorage.getItem('id')
   const [oldPassWord, setOldPassWord] = useState("");
   const [newPassWord, setNewPassWord] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -52,8 +51,7 @@ export default function ChangePasswordPage() {
     setPrintError1(null);
     setPrintError2(null);
     setPrintError(null);
-    const id = sessionStorage.getItem("user");
-
+    
     if (!oldPassWord) {
       setPrintError1("Chưa nhập mật khẩu cũ!");
       return;
@@ -72,6 +70,19 @@ export default function ChangePasswordPage() {
     } else {
       setPrintError(null);
     }
+    const data = {
+      old_password: oldPassWord,
+      new_password: newPassWord
+    }
+    console.log(data)
+    ClassApi.changePassword(data, id)
+      .then((res) => {
+        toast.success("Đổi mật khẩu thành công!")
+      })
+      .catch((err) => {
+        console.log(err)
+        toast.warning("Mật khẩu cũ không hợp lệ!")
+      })
   };
 
   return (

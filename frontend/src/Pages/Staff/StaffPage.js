@@ -14,9 +14,17 @@ const tableHead = [
 ];
 
 export default function StaffPage() {
-  const [staffs, setStaffs] = useState([{
-    staffName: "Phùng Thanh Đăng"
-  }]);
+  const [staffs, setStaffs] = useState([]);
+  useEffect(() => {
+    ClassAPi.getAllStaff()
+      .then((respone) => {
+        console.log(respone.data)
+        setStaffs(respone.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []);
 
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
@@ -48,23 +56,22 @@ export default function StaffPage() {
             </TableHead>
             <TableBody>
               {staffs.map(
-                  (column, index) =>
-                    column &&
-                    column.staffName !== null && (
-                      <TableRow key={index}>
-                        <TableCell style={{ fontSize: "20px", width: '150px' }} >
-                          {index + 1}
-                        </TableCell>
-                        <TableCell style={{ fontSize: '20px', width: '260px' }}>{column.staffName}</TableCell>
-                        <TableCell>
-                          <Link to={"/staff/edit/" + column.bookId}>
-                            <Typography style={{ fontSize: "18px" }}>
-                              Chi tiết
-                            </Typography>
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                (column, index) =>
+                  column &&
+                    <TableRow key={index}>
+                      <TableCell style={{ fontSize: "20px", width: '150px' }} >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell style={{ fontSize: '20px', width: '260px' }}>{column.name}</TableCell>
+                      <TableCell>
+                        <Link to={"/staff/edit/" + column.id}>
+                          <Typography style={{ fontSize: "18px" }}>
+                            Chi tiết
+                          </Typography>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  )}
             </TableBody>
           </Table>
         </TableContainer>

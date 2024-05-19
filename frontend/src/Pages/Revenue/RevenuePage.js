@@ -10,6 +10,8 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ButtonSearch from "../../component/ButtonSearch";
+import dayjs from "dayjs";
+import ClassAPi from '../../Apis/Api'
 
 const CustomizedDatePicker = styled(DatePicker)`
   & .MuiInputBase-input {
@@ -22,13 +24,10 @@ const CustomizedDatePicker = styled(DatePicker)`
 `;
 
 export default function RevenuePage() {
-  const [books, setBooks] = useState([{
-    bookName: "Sherlock Holmes", 
-    quantity: 1, 
-    cost: 400000}]);
+  const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [date, setDate] = useState(null);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -57,20 +56,14 @@ export default function RevenuePage() {
         <Grid item xs={12} marginTop={"15px"}>
           <CustomizedDatePicker
             label="Chọn ngày"
+            value={(date)}
+            onChange={(date) => {setDate(date)}}
             slotProps={{ textField: { variant: "filled" } }}
             sx={{ marginRight: "35px" }}
             format="DD-MM-YYYY"
           />
-          <TextField
-            label="Tên sách"
-            variant="filled"
-            style={{ marginRight: "35px" }}
-            inputProps={{ style: { fontSize: "20px" } }}
-            InputLabelProps={{ style: { fontSize: "20px" } }}
-          />
         </Grid>
       </LocalizationProvider>
-
 
       <Grid item xs = {12}>
         <ButtonSearch onclick={() => { }} title="Tra cứu"></ButtonSearch>
@@ -85,7 +78,6 @@ export default function RevenuePage() {
       <Grid item xs = {12} > 
         <b style={{fontSize: "22px"}}> Tổng tiền: 0 đồng </b>
       </Grid>
-
 
       <Grid item>
         <TableContainer component={Paper}>

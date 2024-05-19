@@ -126,11 +126,17 @@ export default function BillAddPage() {
   }
   const handleSubmit = (event) => {
     event.preventDefault();
-    const bill_payments = []
+    const bill_payments = [];
+    const change_quantity = [];
     payments.map((payment, _) => {
       bill_payments.push({
         book_id: payment.id,
         quantity: payment.quantity,
+        price: payment.price
+      });
+      change_quantity.push({
+        book_id: payment.id,
+        quantity: payment.remain - payment.quantity,
       });
     });   
     const offsetMinutes = -7 * 60 * 60000;
@@ -152,8 +158,11 @@ export default function BillAddPage() {
     console.log(data)
     ClassAPi.postNewBill(data)
       .then((respone) => {
-        toast.success('Tạo hóa đơn thành công')
         console.log(respone)
+        ClassAPi.editQuantity(change_quantity)
+          .then((respone) => {
+            toast.success('Tạo hóa đơn thành công')
+          })
       })
       .catch((err) => {
         toast.error("Tạo hóa đơn thất bại")
@@ -263,7 +272,8 @@ export default function BillAddPage() {
                       <TableCell >
                         <AutoComplete
                           optionList={bookShrinkList}
-                          onChange={handleChangeBook(index)}>
+                          onChange={handleChangeBook(index)}
+                          show={true}>
                         </AutoComplete>
                       </TableCell>
 
