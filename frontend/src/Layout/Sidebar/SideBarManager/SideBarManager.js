@@ -67,47 +67,6 @@ function SideBarManager() {
               Nhân viên
             </Button>
           </NavLink>
-
-          <NavLink to="/statistics">
-            <Button
-              style={{
-                padding: "10px 0px",
-                fontSize: "30px",
-                color: "#4D5656",
-                fontWeight: "400",
-                textTransform: "none",
-                justifyContent: "flex-start",
-                paddingLeft: "35px",
-                borderRadius: "10px",
-                paddingBottom: "4px",
-              }}
-              className={cx("btn")}
-              startIcon={<StatisticsIcon />}
-            >
-              Thống kê
-            </Button>
-          </NavLink>
-
-          <NavLink to="/promotion">
-            <Button
-              style={{
-                padding: "10px 0px",
-                fontSize: "30px",
-                color: "#4D5656",
-                fontWeight: "400",
-                textTransform: "none",
-                justifyContent: "flex-start",
-                paddingLeft: "35px",
-                borderRadius: "10px",
-                paddingBottom: "4px",
-              }}
-              className={cx("btn")}
-              startIcon={<PromotionIcon />}
-            >
-              Khuyến mãi
-            </Button>
-          </NavLink>
-
         </div>
         <div className={cx("hr")}></div>
         <div className={cx("user")}>

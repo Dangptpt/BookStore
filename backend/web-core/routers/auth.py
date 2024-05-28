@@ -112,7 +112,7 @@ async def reset_password(
       return {"detail": "failed",
               "description": 'invalid id'}
     print(data)
-    reset_password = generate_password(12)  
+    reset_password = generate_password(8)  
     to_email = data[0]['email']
     subject = 'RESET PASSWORD'
     from_email = USERNAME
@@ -147,8 +147,8 @@ async def reset_password(
 import string
 import random  
 
-def generate_password(length=12):
-    characters = string.ascii_letters + string.digits + string.punctuation
+def generate_password(length=8):
+    characters = string.ascii_letters + string.digits
     
     password = ''.join(random.choice(characters) for i in range(length))
     

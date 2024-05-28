@@ -208,6 +208,16 @@ class ClassApi {
     })
   }
 
+  getStatistic(day) {
+    return axios.get(API_BASE_URL + `/statistic?day=${day}`, {
+      headers: {
+        "access-control-allow-origin": "*",
+        "content-type": "application/json; charset=utf-8 ",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      }
+    })
+  }
+
   /**** Auth ****/
   postLogin(account, password) {
     return axios.post(API_BASE_URL + "/auth/login", {

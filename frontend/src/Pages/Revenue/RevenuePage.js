@@ -28,6 +28,31 @@ export default function RevenuePage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [date, setDate] = useState(null);
+  const [nbill, setNbill] = useState(0);
+  const [nbook, setNbook] = useState(0);
+  const [amount, setAmount] = useState(0);
+  const handleSearch = () => {
+    const offsetMinutes = 7 * 60 * 60000;
+    let dateonly = new Date()
+    if (date != null)
+      if (date.toString() != 'Invalid Date' )
+        dateonly = new Date(date + offsetMinutes);
+      else return;
+    else return
+    console.log(dateonly.toISOString().slice(0, 10)) 
+    ClassAPi.getStatistic(dateonly.toISOString().slice(0, 10))
+      .then((respone) => {
+        const data = respone.data
+        console.log(data)
+        setNbill(data.total_bill)
+        setNbook(data.total_book)
+        setAmount(data.total_amount)
+        setBooks(data.list_book)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -66,17 +91,17 @@ export default function RevenuePage() {
       </LocalizationProvider>
 
       <Grid item xs = {12}>
-        <ButtonSearch onclick={() => { }} title="Tra cứu"></ButtonSearch>
+        <ButtonSearch onclick={handleSearch} title="Tra cứu"></ButtonSearch>
       </Grid>
 
       <Grid item xs = {12}> 
-        <b style={{fontSize: "22px"}}> Số đơn hàng: 0 </b>
+        <b style={{fontSize: "22px"}}> Số đơn hàng: {nbill} </b>
       </Grid>
       <Grid item xs = {12} > 
-        <b style={{fontSize: "22px"}}> Số lượng sách bán: 0 </b>
+        <b style={{fontSize: "22px"}}> Số lượng sách bán: {nbook} </b>
       </Grid>
       <Grid item xs = {12} > 
-        <b style={{fontSize: "22px"}}> Tổng tiền: 0 đồng </b>
+        <b style={{fontSize: "22px"}}> Tổng tiền: {amount} đồng </b>
       </Grid>
 
       <Grid item>
@@ -111,10 +136,9 @@ export default function RevenuePage() {
                         <TableCell style={{ fontSize: "20px", width: '150px' }} >
                           {page * rowsPerPage + index + 1}
                         </TableCell>
-
-                        <TableCell style={{ fontSize: '20px', width: '300px' }}>{column.bookName}</TableCell>
+                        <TableCell style={{ fontSize: '20px', width: '300px' }}>{column.name}</TableCell>
                         <TableCell style={{ fontSize: '20px', width: '200px' }}>{column.quantity}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.cost}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{column.price*column.quantity}</TableCell>
                         
                       </TableRow>
                     ))}

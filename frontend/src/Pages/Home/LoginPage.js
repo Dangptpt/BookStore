@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import CircularProgress from '@mui/material/CircularProgress';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -17,32 +15,12 @@ import { useNavigate } from "react-router-dom";
 import ClassApi, { API_BASE_URL } from "../../Apis/Api";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify'
-const style = {
-  position: 'absolute',
-  top: '30%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
-  const [open, setOpen] = useState(false);
-  const [wait, setWait] = useState(false)
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   const changeAccount = (e) => {
     setAccount(e.target.value)
   }
@@ -73,23 +51,7 @@ export default function LoginPage() {
       console.error('Error fetching data:', error);
     });
   };
-
-  const handelResetPassword = () => {
-    setWait(true)
-    ClassApi.resetPassword(account)
-      .then((response) => {
-        console.log(response);
-        toast.success("Gửi mật khẩu thành công!")
-        setWait(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        toast.error("Gửi mật khẩu thất bại!")
-        setWait(false)
-      })
-
-  }
-
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -147,35 +109,6 @@ export default function LoginPage() {
             >
               Đăng nhập
             </Button>
-            <Grid item xs>
-              <Link href="#" variant="body2" onClick={handleOpen}>
-                Quên mật khẩu
-              </Link>
-            </Grid>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="parent-modal-title"
-              aria-describedby="parent-modal-description"
-            >
-              <Box sx={{ ...style, width: 400 }}>
-                <h2 id="parent-modal-title">Mật khẩu mới sẽ được gửi đến email của bạn</h2>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  style={{ fontSize: "18px" }}
-                  onClick={handelResetPassword}
-                >
-                  Xác nhận
-                </Button>
-                { wait &&
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <CircularProgress color="primary" />
-                </div>
-}
-              </Box>
-            </Modal>
           </Box>
         </Box>
       </Container>

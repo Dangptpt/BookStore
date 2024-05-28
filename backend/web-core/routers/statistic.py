@@ -30,7 +30,6 @@ async def get_statistic_by_day(
     data = supabase.table('bill').select(
          'payment', 'amount').gte(
           'time_created', start).lte('time_created', end).execute().data
-
     total_amount = 0
     total_book = 0  
     marks = []
@@ -43,20 +42,21 @@ async def get_statistic_by_day(
           marks.append(pay['book_id'])
           book = supabase.table('book').select("name", "id").eq("id", pay['book_id']).execute().data[0]
           list_book.append({
-            name: book['name'],
-            quantity: pay['quantity'],
-            price: pay['price'],
-            id: book['id']
+            'name': book['name'],
+            'quantity': pay['quantity'],
+            'price': pay['price'],
+            'name': book['name']
           })
         else:
           for book in list_book:
             if book['id'] == pay['book_id']:
               book['quantity'] += pay['quantity']
-
+    print(total_amount)
     return {
       "total_bill": len(data),
       "total_amount": total_amount,
-      "total_book": total_book
+      "total_book": total_book,
+      "list_book": list_book
     }
   except:
     return BAD_REQUEST
