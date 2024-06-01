@@ -208,6 +208,16 @@ class ClassApi {
     })
   }
 
+  deleteStaff(id) {
+    return axios.delete(API_BASE_URL + `/staff/${id}`, {
+      headers: {
+        "access-control-allow-origin": "*",
+        "content-type": "application/json; charset=utf-8 ",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      }
+    })
+  }
+
   getStatistic(day) {
     return axios.get(API_BASE_URL + `/statistic?day=${day}`, {
       headers: {
