@@ -77,3 +77,18 @@ async def edit_infomation(
     return {"detail": "success"}
   except:
     return BAD_REQUEST
+
+
+@router.delete('/{id}')
+async def delete_staff(
+  supabase: Annotated[Client, Depends(get_supabase)],
+  id: int,
+  user = Depends(get_current_user),
+):
+  try:
+    if user['role'] != 'admin':
+      return FORBIDDEN
+    supabase.table('staff').delete().eq('id', id).execute().data
+    return {"detail": "success"}
+  except:
+    return BAD_REQUEST
