@@ -307,7 +307,7 @@ export default function StaffEditPage() {
           aria-describedby="parent-modal-description"
         >
           <Box sx={{ ...style, width: 400 }}>
-            <h2 id="parent-modal-title">Mật khẩu mới sẽ được gửi đến email của bạn</h2>
+            <h2 id="parent-modal-title">Mật khẩu mới sẽ được gửi đến email của nhân viên</h2>
             <Button
               fullWidth
               variant="contained"

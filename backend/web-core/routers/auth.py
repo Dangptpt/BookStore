@@ -59,10 +59,12 @@ async def login(
     if len(user) == 0:
       return {"detail": "failed",
               "description": 'Tài khoản không tồn tại'}
-    
+    name  = user[0]['name']
+    if name == None:
+       name = ''
     if verify_password(login.password, user[0]['password']) == True: 
       token_data = TokenData(id=user[0]['id'], staff_code=user[0]['staff_code'], 
-                             role=user[0]['role'], name=user[0]['name'])
+                             role=user[0]['role'], name=name)
       access_token = create_access_token(token_data.dict())
       return {
           'token': Token(access_token=access_token, token_type='bearer'),

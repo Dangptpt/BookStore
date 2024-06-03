@@ -52,10 +52,13 @@ export default function StaffPage() {
       .then((respone) => {
         console.log(respone.data)
         setStaffs(staffs.filter((staff) => staff.id !== id))
+        setCorrect(true)
       })
       .catch((err) => {
         console.log(err)
+        setCorrect(false)
       });
+    //console.log(id)
   }
 
   return (
@@ -104,20 +107,21 @@ export default function StaffPage() {
                       <Typography onClick={handleOpen} style={{ fontSize: "18px", color: "red" }}>
                         Xóa
                       </Typography>
-                      <Modal
+                    </TableCell>
+                    <Modal
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="parent-modal-title"
                         aria-describedby="parent-modal-description"
                       >
                         <Box sx={{ ...style, width: 400 }}>
-                          <h2 id="parent-modal-title">Xác nhân xóa nhân viên {column.name}</h2>
+                          <h2 id="parent-modal-title">Xác nhận xóa nhân viên {column.name}</h2>
                           <Button
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             style={{ fontSize: "18px" }}
-                            onClick={handleDelete(column.id)}
+                            onClick={() => handleDelete(column.id)}
                           >
                             Xác nhận
                           </Button>
@@ -129,8 +133,8 @@ export default function StaffPage() {
                           }
                         </Box>
                       </Modal>
-                    </TableCell>
                   </TableRow>
+                  
               )}
             </TableBody>
           </Table>
