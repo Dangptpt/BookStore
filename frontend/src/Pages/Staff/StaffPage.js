@@ -118,7 +118,7 @@ export default function StaffPage() {
                           <h2 id="parent-modal-title">Xác nhận xóa nhân viên {column.name}</h2>
                           <Button
                             fullWidth
-                            variant="contained"
+                            variant="contained"    
                             sx={{ mt: 3, mb: 2 }}
                             style={{ fontSize: "18px" }}
                             onClick={() => handleDelete(column.id)}

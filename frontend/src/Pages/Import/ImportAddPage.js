@@ -4,7 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers";
 import { styled } from "@mui/system";
-import { Table, TableBody, TableCell, createTheme, ThemeProvider } from "@mui/material";
+import { Table, TableBody, TableCell, createTheme, ThemeProvider, InputAdornment } from "@mui/material";
 import { TableRow, TableHead, TableContainer } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import AutoComplete from "../../component/AutoCompleteSearch"
 import ClassAPi from '../../Apis/Api'
 import dayjs from "dayjs";
+import formatter from "../../component/Formatter";
 
 const CustomizedDatePicker = styled(DatePicker)`
   & .MuiInputBase-input {
@@ -125,7 +126,12 @@ export default function ImportAddPage() {
     event.preventDefault();
     const bill_payments = [];
     const change_quantity = [];
-    payments.map((payment, _) => {
+    let filter_payments = payments.filter((payment, _) => payment.quantity > 0)
+    if (filter_payments.length === 0) {
+      toast.warning("Chưa chọn sách nào để nhập")
+      return;
+    }
+    filter_payments.map((payment, _) => {
       bill_payments.push({
         book_id: payment.id,
         quantity: payment.quantity,
@@ -135,12 +141,12 @@ export default function ImportAddPage() {
         book_id: payment.id,
         quantity: payment.remain + payment.quantity,
       });
-    });   
+    });
     const offsetMinutes = -7 * 60 * 60000;
     let time_created = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));;
     time_created = new Date(date - offsetMinutes)
     console.log(time_created)
-    
+
     const data = {
       import_info: {
         code: code,
@@ -317,7 +323,7 @@ export default function ImportAddPage() {
 
                       <TableCell >
                         <TextField
-                          value={payment.price * payment.quantity}
+                          value={formatter.format(payment.price * payment.quantity)}
                           inputProps={{
                             style: { fontSize: "20px", width: "180px" },
                             readOnly: true,
@@ -345,9 +351,12 @@ export default function ImportAddPage() {
                   </TableCell>
                   <TableCell colSpan={4} style={{ fontSize: "20px" }}>
                     <TextField
-                      value={amount}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">đồng</InputAdornment>,
+                      }}
+                      value={formatter.format(amount)}
                       inputProps={{
-                        style: { fontSize: "18px" },
+                        style: { fontSize: "18px", width: "120px"},
                         readOnly: true,
                       }}>
                     </TextField>
@@ -378,8 +387,8 @@ export default function ImportAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
-              value = {description}
-              onChange={(e) => {setDescription(e.target.value)}}
+              value={description}
+              onChange={(e) => { setDescription(e.target.value) }}
               style={{ width: "510px", marginLeft: "-120px" }}
               inputProps={{ style: { fontSize: "20px" } }}
             ></TextField>

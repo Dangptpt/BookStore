@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Grid, Typography, TextField, Button, ThemeProvider, createTheme } from "@mui/material";
+import { Grid, Typography, TextField, Button, ThemeProvider, createTheme, InputAdornment } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { NavLink } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -177,6 +177,9 @@ export default function BookAddPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
+            InputProps={{
+              endAdornment: <InputAdornment position="end">đồng</InputAdornment>,
+            }}
               value={price}
               onChange={handleChangePrice}
               type="price"

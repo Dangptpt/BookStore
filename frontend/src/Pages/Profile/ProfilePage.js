@@ -87,9 +87,10 @@ export default function ProfilePage() {
     ClassAPi.editStaff(id, data)
       .then((respone) => {
         toast.success('Cập nhật thông tin thành công')
+        sessionStorage.setItem('name', name)
       })
       .catch((err) => {
-        toast.error("Tạo hóa đơn thất bại")
+        toast.error("Cập nhật thông tin thất bại")
         console.log(err)
       })
     }

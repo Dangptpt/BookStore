@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { Grid, Typography, TextField, Paper, Button } from "@mui/material";
+import { Grid, Typography, TextField, Paper, Button, InputAdornment } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import AutoComplete from "../../component/AutoCompleteSearch"
 import ClassAPi from '../../Apis/Api'
 import dayjs from "dayjs";
+import formatter from "../../component/Formatter";
 
 const CustomizedDateTimePicker = styled(DateTimePicker)`
   & .MuiInputBase-input {
@@ -128,7 +129,13 @@ export default function BillAddPage() {
     event.preventDefault();
     const bill_payments = [];
     const change_quantity = [];
-    payments.map((payment, _) => {
+    let filter_payments = payments.filter(payment => payment.quantity > 0)
+    if (filter_payments.length == 0) {
+      toast.warning("Chưa chọn sách mua!")
+      return
+    }
+    console.log(filter_payments)
+    filter_payments.map((payment, _) => {
       bill_payments.push({
         book_id: payment.id,
         quantity: payment.quantity,
@@ -296,7 +303,7 @@ export default function BillAddPage() {
                             style: { fontSize: "20px", width: "180px" },
                             readOnly: true,
                           }}
-                          value={payment.price * payment.quantity}
+                          value={formatter.format(payment.price * payment.quantity)}
                         >
                         </TextField>
                       </TableCell>
@@ -321,11 +328,14 @@ export default function BillAddPage() {
                   </TableCell>
                   <TableCell colSpan={4} style={{ fontSize: "20px" }}>
                     <TextField
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">đồng</InputAdornment>,
+                    }}
                       inputProps={{
-                        style: { fontSize: "18px" },
+                        style: { fontSize: "18px", width: "120px"},
                         readOnly: true,
                       }}
-                      value={amount}>
+                      value={formatter.format(amount)}>
                     </TextField>
                   </TableCell>
                 </TableRow>

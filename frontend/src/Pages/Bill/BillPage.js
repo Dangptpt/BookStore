@@ -12,6 +12,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ButtonSearch from "../../component/ButtonSearch";
 import ClassAPi from '../../Apis/Api'
+import formatter from "../../component/Formatter";
 
 const CustomizedDateTimePicker = styled(DateTimePicker)`
   & .MuiInputBase-input {
@@ -155,7 +156,7 @@ export default function BillPage() {
                         <TableCell style={{ fontSize: '20px', width: '250px' }}>{column.cashier_name}</TableCell>
                         <TableCell style={{ fontSize: '20px', width: '250px' }}>{column.customer_name}</TableCell>
                         <TableCell style={{ fontSize: '20px' }}>{column.time_created}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.amount}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{formatter.format(column.amount)}</TableCell>
                         <TableCell>
                           <Link to={"/bill/edit/" + column.id}>
                             <Typography style={{ fontSize: "18px" }}>

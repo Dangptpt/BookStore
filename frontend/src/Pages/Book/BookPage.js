@@ -5,6 +5,7 @@ import ButtonSearch from "../../component/ButtonSearch";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ClassAPi from '../../Apis/Api'
+import formatter from "../../component/Formatter";
 
 const tableHead = [
   { name: "Số thứ tự" },
@@ -17,7 +18,6 @@ const tableHead = [
 ];
 export default function BookPage() {
   const [books, setBooks] = useState([]);
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [name, setName] = useState('')
@@ -130,7 +130,7 @@ export default function BookPage() {
                         <TableCell style={{ fontSize: '20px', width: '200px' }}>{column.category}</TableCell>
                         <TableCell style={{ fontSize: '20px' }}>{column.author}</TableCell>
                         <TableCell style={{ fontSize: '20px' }}>{column.quantity}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.price}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{formatter.format(column.price)}</TableCell>
                         <TableCell>
                           <Link to={"/book/edit/" + column.id}>
                             <Typography style={{ fontSize: "18px" }}>

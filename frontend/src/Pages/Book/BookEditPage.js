@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography, TextField, Button, ThemeProvider, createTheme, InputAdornment  } from "@mui/material";
+import { Grid, Typography, TextField, Button, ThemeProvider, createTheme, InputAdornment } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { NavLink, useParams } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -44,6 +44,7 @@ export default function BookEditPage() {
   const [price, setPrice] = useState();
   const [quantity, setQuantity] = useState();
   const param = useParams()
+  const role = sessionStorage.getItem('role')
   const handleChangeName = (e) => {
     setName(e.target.value)
   }
@@ -63,15 +64,18 @@ export default function BookEditPage() {
     setPrice(e.target.value)
   }
   const handleSubmit = (event) => {
+    if (role !== 'admin')
+      return
     event.preventDefault();
     console.log(name, author, category, publish_year, publish_company, price)
-    ClassAPi.editBook(param.id, 
-      {name: name,
-      category: category,
-      author: author,
-      price: price,
-      publish_year: publish_year,
-      publish_company: publish_company
+    ClassAPi.editBook(param.id,
+      {
+        name: name,
+        category: category,
+        author: author,
+        price: price,
+        publish_year: publish_year,
+        publish_company: publish_company
       })
       .then((respone) => {
         toast.success('Cập nhật thành công')
@@ -81,7 +85,7 @@ export default function BookEditPage() {
         toast.error("Cập nhật thất bại")
         console.log(err)
       })
-  } 
+  }
   useEffect(() => {
     ClassAPi.getBookById(param.id)
       .then((respone) => {
@@ -97,8 +101,8 @@ export default function BookEditPage() {
       .catch((err) => {
         console.log(err)
       });
-    
-  }, []); 
+
+  }, []);
   return (
     <Grid container spacing={1} style={{ padding: "40px", marginLeft: "20px", marginTop: "-50px" }}>
       <Grid item xs={12}>
@@ -116,7 +120,7 @@ export default function BookEditPage() {
           </Grid>
           <Grid item xs={10}>
             <TextField
-              value = {name}
+              value={name}
               onChange={handleChangeName}
               style={{ width: "400px", marginLeft: "-50px" }}
               inputProps={{ style: { fontSize: "20px" } }}

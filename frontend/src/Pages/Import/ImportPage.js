@@ -12,6 +12,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ButtonSearch from "../../component/ButtonSearch";
 import ClassAPi from '../../Apis/Api'
+import formatter from "../../component/Formatter";
 
 const CustomizedDatePicker = styled(DatePicker)`
   & .MuiInputBase-input {
@@ -154,7 +155,7 @@ export default function ImportPage() {
                         <TableCell style={{ fontSize: '20px', width: '200px' }}>{column.code}</TableCell>
                         <TableCell style={{ fontSize: '20px', width: '300px' }}>{column.staff_name}</TableCell>
                         <TableCell style={{ fontSize: '20px' }}>{column.date_created}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.cost}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{formatter.format(column.cost)}</TableCell>
                         <TableCell>
                           <Link to={"/import/edit/" + column.id}>
                             <Typography style={{ fontSize: "18px" }}>

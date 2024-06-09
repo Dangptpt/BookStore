@@ -12,6 +12,7 @@ import { useState } from "react";
 import ButtonSearch from "../../component/ButtonSearch";
 import dayjs from "dayjs";
 import ClassAPi from '../../Apis/Api'
+import formatter from "../../component/Formatter";
 
 const CustomizedDatePicker = styled(DatePicker)`
   & .MuiInputBase-input {
@@ -101,7 +102,7 @@ export default function RevenuePage() {
         <b style={{fontSize: "22px"}}> Số lượng sách bán: {nbook} </b>
       </Grid>
       <Grid item xs = {12} > 
-        <b style={{fontSize: "22px"}}> Tổng tiền: {amount} đồng </b>
+        <b style={{fontSize: "22px"}}> Tổng tiền: {formatter.format(amount)} đồng </b>
       </Grid>
 
       <Grid item>
@@ -138,7 +139,7 @@ export default function RevenuePage() {
                         </TableCell>
                         <TableCell style={{ fontSize: '20px', width: '300px' }}>{column.name}</TableCell>
                         <TableCell style={{ fontSize: '20px', width: '200px' }}>{column.quantity}</TableCell>
-                        <TableCell style={{ fontSize: '20px' }}>{column.price*column.quantity}</TableCell>
+                        <TableCell style={{ fontSize: '20px' }}>{formatter.format(column.price*column.quantity)}</TableCell>
                         
                       </TableRow>
                     ))}

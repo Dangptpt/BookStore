@@ -4,7 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { styled } from "@mui/system";
-import { Table, TableBody, TableCell, createTheme, ThemeProvider } from "@mui/material";
+import { Table, TableBody, TableCell, createTheme, ThemeProvider, InputAdornment } from "@mui/material";
 import { TableRow, TableHead, TableContainer } from "@mui/material";
 import { NavLink, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { Autocomplete } from "@mui/material";
 import AutoComplete from "../../component/AutoCompleteSearch";
 import ClassAPi from '../../Apis/Api'
+import formatter from "../../component/Formatter";
 
 const CustomizedDateTimePicker = styled(DateTimePicker)`
   & .MuiInputBase-input {
@@ -74,8 +75,8 @@ export default function BillEditPage() {
       .catch((err) => {
         console.log(err)
       });
-    
-  }, []); 
+
+  }, []);
   const handleAddPayment = () => {
     setPayments([...payments, { label: "", cost: "", residenceFeeId: "" }]);
   };
@@ -94,7 +95,7 @@ export default function BillEditPage() {
 
       <ThemeProvider theme={theme}>
 
-      <Grid item container alignItems="center" sx={{ mt: 1 }}>
+        <Grid item container alignItems="center" sx={{ mt: 1 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
 
             <Grid item xs={2}>
@@ -207,7 +208,7 @@ export default function BillEditPage() {
 
                       <TableCell >
                         <TextField
-                          value={payment.quantity*payment.price}
+                          value={formatter.format(payment.quantity * payment.price)}
                           inputProps={{
                             style: { fontSize: "20px", width: "180px" },
                             readOnly: true,
@@ -235,9 +236,12 @@ export default function BillEditPage() {
                   </TableCell>
                   <TableCell colSpan={4} style={{ fontSize: "20px" }}>
                     <TextField
-                      value={amount}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">đồng</InputAdornment>,
+                      }}
+                      value={formatter.format(amount)}
                       inputProps={{
-                        style: { fontSize: "18px" },
+                        style: { fontSize: "18px", width: "120px" },
                         readOnly: true,
                       }}>
                     </TextField>

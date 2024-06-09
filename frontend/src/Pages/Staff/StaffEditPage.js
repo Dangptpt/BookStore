@@ -256,32 +256,20 @@ export default function StaffEditPage() {
 
       </ThemeProvider>
       <Grid item sx={{ mt: 2 }}>
-        <Button
-          variant="contained"
-          style={{
-            backgroundColor: "#79C9FF",
-            margin: "30px 0px",
-            fontSize: "20px",
-            color: "black",
-            fontWeight: "500",
-          }}
-          type="submit"
-        >
-          Xác nhận
-        </Button>
-
         <NavLink to="/staff">
+
           <Button
             variant="contained"
             style={{
-              backgroundColor: "#FA7070",
-              marginLeft: "50px",
+              backgroundColor: "#79C9FF",
+              margin: "30px 0px",
               fontSize: "20px",
               color: "black",
               fontWeight: "500",
             }}
+            type="submit"
           >
-            Hủy
+            Xác nhận
           </Button>
         </NavLink>
 
